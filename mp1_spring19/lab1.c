@@ -186,13 +186,12 @@ int main(int argc, char *argv[])
             rec_ptr = task_list_schedule(my_list, arg2, arg1);
             if (rec_ptr != NULL)
             {
-                task_list_set_state(my_list, arg1, RUNNING);
                 printf("Now running task:\n");
                 print_task_rec_short(rec_ptr);
                 
             }
             else {
-                printf("Did not find task to schedule...");
+                printf("Did not find task to schedule...\n");
             }
         }
 
