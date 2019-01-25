@@ -31,7 +31,7 @@ struct task_t {
 // Header block for the list
 struct task_list_t {
     int task_count;            // current number of records in list
-    int task_size;             // size of the list
+    int list_size;             // size of the list
     struct task_t **task_ptr;  // array of task pointers
 };
 
