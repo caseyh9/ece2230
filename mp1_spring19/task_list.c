@@ -1,8 +1,19 @@
-// See ECE 223 programming guide for required comments!
-//
-// You must have comments at the top of the file.
-//
-// EVERY function must have comments
+/*	task_list.c
+	Casey Hird
+	ECE 2230
+	Spring 2019
+	MP1
+
+	Purpose: Provides functions for the lab1 program. These include functions
+	for adding to a task list, removing from a list, searching through a
+	list, etc.
+
+	Assumptions: We assume that the writer of lab1.c knows how to use the
+	functions here correctly. We also assume that the header file task_list.h
+	provides all necessary information for these functions.
+
+	Bugs: No known bugs.
+*/
 
 
 #include <stdlib.h>
@@ -12,9 +23,18 @@
 #define TRUE 1
 #define FALSE 0
 
+/*
+	Constructs a task_list_t struct.
+	
+	Input: size indicates the size of the new task_list_t
+
+	Output: returns a pointer to the newly created task_list_t struct
+*/
 struct task_list_t *task_list_construct(int size)
 {
+	// Allocate memory for task_list_t structure
     struct task_list_t* list = (struct task_list_t*) malloc(sizeof(struct task_list_t));
+	// Initialize task list values
     list->task_count = 0;
 	list->list_size = size;
 	list->task_ptr = (struct task_t**) malloc(size * sizeof(struct task_t*));
@@ -22,6 +42,13 @@ struct task_list_t *task_list_construct(int size)
     return list;
 }
 
+/*
+	Frees the memory for a task_list_t struct
+
+	Input: list_ptr is a pointer to the task_list_t to be destroyed
+
+	Output: the memory has been freed
+*/
 void task_list_destruct(struct task_list_t *list_ptr)
 {
     assert(list_ptr != NULL && "TASK LIST NULL IN DESTRUCT");
@@ -32,6 +59,13 @@ void task_list_destruct(struct task_list_t *list_ptr)
     // free memory
 }
 
+/*
+	Counts the entries in the task list.
+
+	Input: list_ptr is a pointer to the task list.
+
+	Output: returns the number of tasks currently in the task list.
+*/
 int task_list_number_entries(struct task_list_t *list_ptr)
 {
     assert(list_ptr != NULL);
@@ -39,6 +73,15 @@ int task_list_number_entries(struct task_list_t *list_ptr)
     return list_ptr->task_count;
 }
 
+/*
+	Adds a tasks to the end of the task list.
+
+	Input: list_ptr is a pointer to the task list.
+	rec_ptr is a pointer to the task to be added.
+
+	Output: returns and integer, 1 if the task is added successfully and
+	-1 if the task could not be added because the list is full.
+*/
 int task_list_add(struct task_list_t *list_ptr, struct task_t *rec_ptr)
 {
     assert(list_ptr != NULL);
@@ -46,6 +89,7 @@ int task_list_add(struct task_list_t *list_ptr, struct task_t *rec_ptr)
 	// Check that the list is not full
 	if (lastIdx == list_ptr->list_size)
 		return -1;
+	// Add the task to the end of the list
 	else
 	{
 		list_ptr->task_ptr[lastIdx] = rec_ptr;
@@ -54,26 +98,49 @@ int task_list_add(struct task_list_t *list_ptr, struct task_t *rec_ptr)
 	}
 }
 
+/*
+	Finds the task at a certain index.
+
+	Input: list_ptr is a pointer to the task list.
+	index is the index of the task to be found.
+
+	Output: returns a pointer to the task if it is found, and 
+	returns NULL is the index is beyond the size of the task list.
+*/
 struct task_t *task_list_access(struct task_list_t *list_ptr, int index)
 {
     assert(list_ptr != NULL && "TASK LIST NULL IN ACCESS\n");
     struct task_t* a_task;
+	// Check that the index given does not go beyond the tasks in the list
 	if (index >= list_ptr->task_count)
 		a_task = NULL;
+	// Return a pointer to the task at the given index
 	else
 		a_task = list_ptr->task_ptr[index];
 	return a_task;
 }
 
+/*
+	Removes a task from the list.
+
+	Input: list_ptr is a pointer to the task list.
+	index is the index of the task to be removed.
+
+	Output: returns a pointer to the removed task, or returns NULL if
+	the index is past the size of the list.
+*/
 struct task_t *task_list_remove(struct task_list_t *list_ptr, int index)
 {
     assert(list_ptr != NULL && "LIST NULL IN REMOVE\n");
     struct task_t* task = NULL;
+	// Check taht the index given does not go beyond the tasks in the list
 	if (index >= list_ptr->task_count)
 		task = NULL;
+	// Remove the task at the given index
 	else
 	{
 		task = list_ptr->task_ptr[index];
+		// Shift the remaining tasks to get rid of the gap
 		while (index < list_ptr->task_count)
 		{
 			list_ptr->task_ptr[index] = list_ptr->task_ptr[index+1];
@@ -84,15 +151,24 @@ struct task_t *task_list_remove(struct task_list_t *list_ptr, int index)
     return task;
 }
 
+/*
+	Finds the first task with a certain priority.
 
+	Input: list_ptr is a pointer to the task list.
+	priority is the priority that you are searching for.
 
+	Output: returns the index of the task if found, otherwise
+	returns -1.
+*/
 int task_list_lookup_first_priority(struct task_list_t *list_ptr, int priority)
 {
     assert(list_ptr != NULL);
 	int found = -1;
 	int i = 0;
+	// Search for the first task with matching priority
 	while (i < list_ptr->task_count)
 	{
+		// Return the index of the task
 		if (list_ptr->task_ptr[i]->priority == priority)
 			return i;
 		else
@@ -101,13 +177,24 @@ int task_list_lookup_first_priority(struct task_list_t *list_ptr, int priority)
     return found;
 }
 
+/*
+	Finds the first task with a certain id.
+
+	Input: list_ptr is a pointer to the task list.
+	task_id is the id we are searching for.
+
+	Output: returns the id of the task if found, otherwise
+	returns -1.
+*/
 int task_list_lookup_id(struct task_list_t *list_ptr, int task_id)
 {
     assert(list_ptr != NULL);
 	int found = -1;
 	int i = 0;
+	// Search for the first task with matching id
 	while (i < list_ptr->task_count)
 	{
+		// Return the index of the task
 		if (list_ptr->task_ptr[i]->task_id == task_id)
 			return i;
 		else
@@ -117,13 +204,23 @@ int task_list_lookup_id(struct task_list_t *list_ptr, int task_id)
     return found;
 }
 
+/*
+	Returns the first task with a certain priority.
 
+	Input: list_ptr is a pointer to the task list.
+	priority is the priority we are searching for.
+
+	Output: returns a pointer to the task if found,
+	otherwise returns NULL.
+*/
 struct task_t *task_list_access_priority(struct task_list_t *list_ptr, int priority)
 {
     assert(list_ptr != NULL && "TASK LIST NULL IN ACCESS\n");
 	int i = 0;
+	// Find the first task that matches the priority
 	while (i < list_ptr->task_count)
 	{
+		// Return a pointer to the task
 		if (list_ptr->task_ptr[i]->priority == priority)
 			return list_ptr->task_ptr[i];
 		else
@@ -132,13 +229,23 @@ struct task_t *task_list_access_priority(struct task_list_t *list_ptr, int prior
     return NULL;
 }
 
+/*
+	Removes the first task with a given priority.
+
+	Input: list_ptr is a pointer to the task list.
+	priority is the priority we are searching for.
+
+	Ouptut: returns a pointer to the removed task.
+*/
 struct task_t *task_list_remove_priority(struct task_list_t *list_ptr, int priority)
 {
     assert(list_ptr != NULL && "LIST NULL IN REMOVE\n");
     struct task_t* task = NULL;
 	int i = 0;
+	// Find the first task that matches the priority
 	while (i < list_ptr->task_count)
 	{
+		// Remove the task
 		if (list_ptr->task_ptr[i]->priority == priority)
 		{
 			task = list_ptr->task_ptr[i];
@@ -156,12 +263,23 @@ struct task_t *task_list_remove_priority(struct task_list_t *list_ptr, int prior
     return task;
 }
 
+/*
+	Finds the first task with a certain id.
+
+	Input: list_ptr is a pointer to the task list.
+	id is the id we are searching for.
+
+	Output: returns a pointer to the task if found,
+	otherwise returns NULL.
+*/
 struct task_t *task_list_access_id(struct task_list_t *list_ptr, int id)
 {
     assert(list_ptr != NULL && "TASK LIST NULL IN ACCESS\n");
 	int i = 0;
+	// Find the first task with the matching id
 	while (i < list_ptr->task_count)
 	{
+		// Return a pointer to the task
 		if (list_ptr->task_ptr[i]->task_id == id)
 			return list_ptr->task_ptr[i];
 		else
@@ -170,13 +288,23 @@ struct task_t *task_list_access_id(struct task_list_t *list_ptr, int id)
     return NULL;
 }
 
+/*
+	Removes the first task with a given id.
+
+	Input: list_ptr is a pointer to the task list.
+	id is the id we are searching for.
+
+	Ouptut: returns a pointer to the removed task.
+*/
 struct task_t *task_list_remove_id(struct task_list_t *list_ptr, int id)
 {
     assert(list_ptr != NULL && "LIST NULL IN REMOVE\n");
     struct task_t* task = NULL;
 	int i = 0;
+	// Find the fist task with the matching id
 	while (i < list_ptr->task_count)
 	{
+		// Remove the task
 		if (list_ptr->task_ptr[i]->task_id == id)
 		{
 			task = list_ptr->task_ptr[i];
@@ -194,7 +322,16 @@ struct task_t *task_list_remove_id(struct task_list_t *list_ptr, int id)
     return task;
 }
 
+/*
+	Determine whether a certain task is runnable.
 
+	Input: list_ptr is a pointer to the task list.
+	nargs is the number of arguments in the task we are searching for.
+	args is a pointer to the array of arguments we are searching for.
+
+	Output: returns the index of the task if it is found,
+	otherwise returns -1.
+*/
 int task_list_determine_runable(struct task_list_t *list_ptr, int nargs, int*args)
 {
 	int i, j;
@@ -207,7 +344,7 @@ int task_list_determine_runable(struct task_list_t *list_ptr, int nargs, int*arg
 			if (list_ptr->task_ptr[i]->nargs == nargs)
 			{
 				j = 0;
-				while (list_ptr->task_ptr[i]->args[j] == args[j] && j < nargs)
+				while (j < nargs && list_ptr->task_ptr[i]->args[j] == args[j])
 					j++;
 				if (j == nargs)
 					return i;
@@ -216,15 +353,26 @@ int task_list_determine_runable(struct task_list_t *list_ptr, int nargs, int*arg
     return -1;
 }
 
+/*
+	Changes the state of a given task.
+
+	Input: list_ptr is a pointer to the task list.
+	id is the id of the task we are searching for.
+	state is the state to which we are changing the task.
+
+	Output: no value is returned, the state of the given task is changed.
+*/
 void task_list_set_state(struct task_list_t *list_ptr, int id, enum state state)
 {
 	enum state current_state = -1;
 	int i = 0;
+	// Determine the current state of the given task
 	while (current_state == -1)
 	{
 		if (list_ptr->task_ptr[i]->task_id == id)
 			current_state = list_ptr->task_ptr[i]->state;
 	}
+	// Change the state to the given state if valid
 	switch (current_state)
 	{
 		case QUEUED:
@@ -244,6 +392,14 @@ void task_list_set_state(struct task_list_t *list_ptr, int id, enum state state)
 	}
 }
 
+/*
+	Removes finished tasks from a list.
+
+	Input: list_ptr is a pointer to a task list
+
+	Output: returns a pointer to a new task list that holds all of the 
+	finished tasks that have been removed.
+*/
 struct task_list_t* task_list_remove_finished(struct task_list_t *list_ptr)
 {
     struct task_list_t* rm = (struct task_list_t*) malloc(sizeof(struct task_list_t));
@@ -257,6 +413,7 @@ struct task_list_t* task_list_remove_finished(struct task_list_t *list_ptr)
 	rm->task_count = 0;
 	rm->task_ptr = (struct task_t**) malloc((rm->list_size)*sizeof(struct task_t*));
 	
+	// Remove finished tasks from old list and add them to new list
 	for (i = 0; i < list_ptr->task_count; i++)
 	{
 		if (list_ptr->task_ptr[i]->state == FINISHED)
@@ -271,14 +428,28 @@ struct task_list_t* task_list_remove_finished(struct task_list_t *list_ptr)
    return rm; 
 }
 
+/*
+	Finds the next task to run, first by id, then by priority is none is found.
+
+	Input: list_ptr is a pointer to the list of tasks
+	priority is the priority we will search for if no task is found
+	with the given id.
+	id is the id of the task to be changed.
+
+	Output: returns a pointer to the task if found,
+	otherwise returns NULL.
+*/
 struct task_t* task_list_schedule(struct task_list_t *list_ptr, int priority, int id)
 {
     struct task_t* task = NULL;
 	int i;
+	// Check for task with the given id
 	for (i = 0; i < list_ptr->task_count; i++)
 	{
 		if (list_ptr->task_ptr[i]->task_id == id)
 		{
+			// If the id is found and not running or finished,
+			// change its state to running and return a pointer to the task
 			if (list_ptr->task_ptr[i]->state != FINISHED && 
 			list_ptr->task_ptr[i]->state != RUNNING)
 			{
@@ -287,11 +458,12 @@ struct task_t* task_list_schedule(struct task_list_t *list_ptr, int priority, in
 			}
 		}
 	}
-	// If this id is not found
+	// If this id is not found, search for the given priority
 	for (i = 0; i < list_ptr->task_count; i++)
 	{
 		if (list_ptr->task_ptr[i]->priority == priority)
 		{		
+			// Change the state to running and return a pointer to the task
 			if (list_ptr->task_ptr[i]->state != FINISHED && 
 			list_ptr->task_ptr[i]->state != RUNNING)
 			{

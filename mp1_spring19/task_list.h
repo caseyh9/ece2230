@@ -1,6 +1,7 @@
 /* task_list.h 
- * Prof. Calhoun 
- * ECE 2230 Spring 2019
+ * Casey Hird
+ * ECE 2230
+ Spring 2019
  * MP1
  *
  * Purpose: The interface definition for MP1.  DO NOT CHANGE THIS FILE
@@ -8,7 +9,7 @@
  * Assumptions: structure definitions and public functions as defined for
  * assignmnet.  There are no extensions.
  *
- * Bugs:
+ * Bugs: No known bugs.
  */
 
 enum state {QUEUED, RUNNING, BLOCKED, FINISHED};

@@ -1,7 +1,7 @@
 /* lab1.c
- * Prof. Jon Calhoun 
- * calhou3
- * ECE 2230 Spring 2019
+ * Casey Hird
+ * ECE 2230
+ * Spring 2019
  * MP1
  *
  *
