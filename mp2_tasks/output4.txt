@@ -1,0 +1,36 @@
+Lab2 list size is 10. Possible commands:
+List: INSERT
+FIND id
+REMOVE id
+UPDATE id state
+SCHEDULE id priority
+DETERMINE
+CLEAN
+REVERSE
+PRINT
+Queue      : ADDTAIL; RMHEAD; PRINTHEAD; PRINTQ
+           : STATS; QUIT
+
+
+Number records: 0, Order: Ascending
+Number records in queue: 0
+Queue empty
+Priority:Wallclocktime:Number of Args:Arg 0:
+Appended 0 onto queue
+Priority:Wallclocktime:Number of Args:Arg 0:Arg 1:
+Appended 1 onto queue
+Priority:Wallclocktime:Number of Args:Arg 0:Arg 1:Arg 2:
+Appended 2 onto queue
+Number records: 0, Order: Ascending
+Number records in queue: 3
+Queue has 3 records
+   0: Task ID: 0 priority = 1 state = QUEUED
+   1: Task ID: 1 priority = 2 state = QUEUED
+   2: Task ID: 2 priority = 3 state = QUEUED
+Deleted head with task id and priority: 0 1
+Queue has 2 records
+   0: Task ID: 1 priority = 2 state = QUEUED
+   1: Task ID: 2 priority = 3 state = QUEUED
+Deleted head with task id and priority: 1 2
+Deleted head with task id and priority: 2 3
+Goodbye
