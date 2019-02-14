@@ -1,6 +1,6 @@
-/* task_support.h       <<-- A template
- * Prof. Calhoun        <<-- some changes needed
- * jonccal
+/* task_support.h 
+ * Casey Hird
+ * crhird
  * ECE 2230 Spring 2019
  * MP2
  *

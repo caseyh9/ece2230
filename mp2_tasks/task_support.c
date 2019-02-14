@@ -1,6 +1,6 @@
-/* task_support.c         <<-- A template 
- * Prof. Calhoun          <<-- many updates required
- * calhou3
+/* task_support.c   
+ * Casey Hird
+ * crhird
  * ECE 2230 Spring 2018
  * MP2
  *
@@ -36,6 +36,7 @@ int* getDetermineArgs(int* num_args);        // get input for "DETERMINE" cmd
 char* state2str(enum state state);           // Converts enum to ASCII
 void print_task_rec_short(task_t *rec);      // print one record
 void print_task_rec_long(task_t *rec) ;      // print one record
+task_t* find_id(list_t* list_ptr, int id, int *index);
 
 /* task_compare is required by the list ADT for sorted lists. 
  *
@@ -101,7 +102,7 @@ void task_list_cleanup(list_t * list_ptr)
  * inputs: 
  *    list_ptr: a list_t * pointer to either sorted or unsorted list
  *
- *    type_of_list: a charter string that must be either "List" or "Queue"
+ *    type_of_list: a character string that must be either "List" or "Queue"
  *
  * output: prints the list in the format required for grading.
  *         Do not change any of these lines (i.e. printfs && print_task_rec_short()
@@ -112,7 +113,7 @@ void task_list_print(list_t * list_ptr, char *list_type)
 
     int i, num_in_list;
 
-    num_in_list = 0; // fix 
+    num_in_list = list_size(list_ptr);
     task_t *rec_ptr = NULL;  // fix
     
     
@@ -124,7 +125,7 @@ void task_list_print(list_t * list_ptr, char *list_type)
 
         for (i = 0; i < num_in_list; i++) {
             printf("%4d: ", i);
-            rec_ptr = NULL;    // fix to grab record at pos i!
+            rec_ptr = list_access(list_ptr, i);    // fix to grab record at pos i!
             print_task_rec_short(rec_ptr);
         }
     }
@@ -137,10 +138,11 @@ void task_list_print(list_t * list_ptr, char *list_type)
  */
 void task_list_stats(list_t * sorted, list_t * unsorted)
 {
-    // TODO: get the number in list and size of the list
-    int num_in_sorted_list = 0; 
-    int num_in_unsorted_list = 0; 
-    int order_of_list = 0; // fix 
+	// Get the size of each list using the list_size() function
+    int num_in_sorted_list = list_size(sorted);
+    int num_in_unsorted_list = list_size(unsorted);
+	// Get the order of the sorted list with list_order()
+    int order_of_list = list_order(sorted);
     
     printf("Number records: %d, Order: %s\n", num_in_sorted_list, 
             order_of_list == 1 ? "Ascending" : "Descending");
@@ -166,7 +168,23 @@ void task_list_add(list_t * list_ptr, int max_list_size)
     // determine the correct return value 
     int added_return = -2;
 
-    //TODO: insert into sorted list
+	// Check that the list has not already reached max size
+	if (list_size(list_ptr) >= max_list_size){
+		added_return = -1;
+	}
+	// Otherwise, add the element to the list
+	else{
+		// If the list is unsorted, add to the end
+		if (list_order(list_ptr) == 0){
+			added_return = 1;
+			list_insert(list_ptr, rec_ptr, max_list_size);
+		}
+		// Otherwise add using the sorted function
+		else{
+			list_insert_sorted(list_ptr, rec_ptr);
+			added_return = 1;
+		}
+	}
 
     if (added_return == 1) {
         printf("Inserted: %d\n", rec_ptr->task_id);
@@ -190,7 +208,9 @@ void task_list_lookup_id(list_t * list_ptr, int id)
     int index = -1;
     task_t *rec_ptr = NULL;   // fix to use 
 
-    
+	// Find the first task with the given id
+	rec_ptr = find_id(list_ptr, id, &index);
+
     if (rec_ptr == NULL) {
         printf("Did not find: %d\n", id);
     } else {
@@ -209,13 +229,18 @@ void task_list_remove_id(list_t * list_ptr, int id)
     int index = -1;
     task_t *rec_ptr = NULL;   // TODO: fix
 
+	// Find the first task with the given id
+	rec_ptr = find_id(list_ptr, id, &index);
+
     if (rec_ptr == NULL) { 
         printf("Did not remove: %d\n", id);
     } else {
-        //TODO: remove
+        // Remove the found task
+		list_remove(list_ptr, index);
         printf("Removed: %d\n", id);
         print_task_rec_long(rec_ptr);
-        //TODO: cleanup
+        // Cleanup
+		task_rec_cleanup(rec_ptr);
     }
     rec_ptr = NULL;
 }
@@ -224,15 +249,37 @@ void task_list_remove_id(list_t * list_ptr, int id)
 /* This function updates the state of the task identified by id if possible */
 void task_list_update(list_t * list_ptr, int id, int state)
 {
-    task_t* rec_ptr = NULL; //fix 
-
+	int index = -1;
+    task_t* rec_ptr = find_id(list_ptr, id, &index);
+	enum state old_state;
 
     if (rec_ptr != NULL){
-    
-        
+		old_state = rec_ptr->state;
+		// If task is finished do nothing
+		if (old_state == FINISHED){
+			assert(old_state == FINISHED);
+		}
+		// If task is queued and the given state is running, set it to running
+		else if (old_state == QUEUED && state == RUNNING){
+			rec_ptr->state = RUNNING;
+		}
+		// If task is running
+		else if (old_state == RUNNING){
+			// If given state is finished, set it
+			if (state == FINISHED){
+				rec_ptr->state = FINISHED;
+			}
+			// If given state is blocked, set it
+			else if (state == BLOCKED){
+				rec_ptr->state = BLOCKED;
+			}
+		}
+		// If task is blocked and given state is running, set it to running
+    	else if (state == BLOCKED && state == RUNNING){
+			rec_ptr->state = RUNNING;
+		} 
         // displays the current state for the task even if not changed 
-        printf("Task %d has state of %s\n", id, state2str(rec_ptr->state));
-    
+        printf("Task %d has state of %s\n", id, state2str(rec_ptr->state)); 
     }
     rec_ptr = NULL;
 
@@ -243,14 +290,43 @@ void task_list_update(list_t * list_ptr, int id, int state)
 void task_list_schedule(list_t * list_ptr, int id, int priority)
 {
     task_t* rec_ptr = NULL;
-    int i;
+    int i = 0;
 
-    /* TODO: */
-
+	// Search for task with matching id to schedule
+	int length = list_size(list_ptr);
+	int found = 0;
+	while (found == 0 && i < length){
+		rec_ptr = list_access(list_ptr, i);
+		if (rec_ptr->task_id == id){
+			found = 1;
+		}
+		else{
+			rec_ptr = NULL;
+			i++;
+		}
+	}
+	// If id is not found, schedule task with given priority
+	if (rec_ptr == NULL){
+		found = 0;
+		i = 0;
+		while (found == 0 && i < length){
+			rec_ptr = list_access(list_ptr, i);
+			if (rec_ptr->priority == priority){
+				found = 1;
+			}
+			else{
+				rec_ptr = NULL;
+				i++;
+			}
+		}
+	}
     
     if (rec_ptr != NULL)
     {
         printf("Now running task:\n");
+		// Schedule the task to run
+		enum state new_state = RUNNING;
+		task_list_update(list_ptr, id, new_state);
         print_task_rec_short(rec_ptr);
         
     }
@@ -267,9 +343,29 @@ void task_list_determine(list_t * list_ptr)
     int idx = -1;
     int* args = getDetermineArgs(&num_args);
     
-    int i,j;
-    int N = -1;
+    int i, j;
     task_t* task = NULL;
+	int length = list_size(list_ptr);
+	i = 0;
+	// Find first runnable task
+	while (i < length && idx == -1){
+		task = list_access(list_ptr, i);
+		j = 0;
+		while (j < num_args && task != NULL){
+			if (task->args[j] == args[j]){
+				j++;
+			}
+			else{
+				task = NULL;
+			}
+		}
+		if (j == num_args){
+			idx = i;
+		}
+		else{
+			i++;
+		}
+	}
 
     if (idx != -1) {
         task = list_access(list_ptr, idx);
@@ -285,22 +381,27 @@ void task_list_determine(list_t * list_ptr)
 void task_list_remove_finished(list_t * list_ptr)
 {
     task_t* task = NULL;
-    list_t* rm = NULL; //fix 
-   
-    int i, N;
+    list_t* rm = task_list_create();
 
-    /*TODO: Remove tasks */
-
+    int i;
+	// Find all finished tasks then remove them from list_ptr
+	// and add them to list rm
+	for (i = 0; i < list_size(list_ptr); i++){
+		if (list_access(list_ptr, i)->state == FINISHED){
+			list_insert(rm, list_remove(list_ptr, i), i);
+		}
+	}
 
     int num_in_list = list_size(rm);
     printf("Removing %d finshed tasks\n", num_in_list);
     for (i = 0; i<num_in_list; i++) {
+		task = list_access(rm, i);
         print_task_rec_short(task);
     }
-    
-    
+ 
     //TODO: cleanup
-
+	task = NULL;
+	list_destruct(rm);
 }
 
 /* This function reverses the order of the items in the list */
@@ -330,10 +431,10 @@ void task_list_reverse(list_t * list_ptr)
  */
 void task_list_add_tail(list_t * list_ptr)
 {
-    task_t *rec_ptr = NULL;  // fix
+    task_t *rec_ptr = (task_t*) malloc(sizeof(task_t));
     fill_task_record(rec_ptr);          // collect input
-    // TODO: add to tail
-
+    // Add to tail
+	list_insert(list_ptr, rec_ptr, list_size(list_ptr));
     printf("Appended %d onto queue\n", rec_ptr->task_id);
 }
 
@@ -345,6 +446,8 @@ void task_list_add_tail(list_t * list_ptr)
 void task_list_remove_head(list_t * list_ptr)
 {
     task_t *task_ptr = NULL;// fix
+	// Remove and return the task at the head of the list
+	task_ptr = list_remove(list_ptr, 0);
 
     if (task_ptr != NULL)
         printf("Deleted head with task id and priority: %d %d\n", 
@@ -360,6 +463,8 @@ void task_list_remove_head(list_t * list_ptr)
 void task_list_print_head(list_t * list_ptr)
 {
     task_t *rec_ptr = NULL; //fix
+	// Return task at the head of the list
+	rec_ptr = list_access(list_ptr, 0);
 
     if (rec_ptr == NULL) {
         printf("Queue is empty\n");
@@ -381,7 +486,30 @@ void task_list_print_head(list_t * list_ptr)
 /****************************************************************************/
 /****************************************************************************/
 
+/*
+	This function returns a pointer to the first task in a given list
+	that has the given id. If no such task is found, return NULL.
 
+	list_ptr: the list being search
+
+	id: the id we are searching for
+
+	index: used as a return value for the index of the task
+*/
+task_t* find_id(list_t* list_ptr, int id, int *index)
+{
+	int i, length;
+	length = list_size(list_ptr);
+	task_t* task;
+	for (i = 0; i < length; i++){
+		task = list_access(list_ptr, i);
+		if (task->task_id == id){
+			*index = i;
+			return task;
+		}
+	}
+	return NULL;
+}
 
 
 

@@ -1,10 +1,10 @@
-/* list.c                  <<-- A template to update and 
- * Prof. Calhoun           <<-- change
- * jonccal
+/* list.c                
+ * Casey Hird
+ * crhird
  * ECE 2230 Spring 2019
  * MP2
  *
- * Propose: A template for list.c. You will make many changes.
+ * Purpose: A template for list.c. You will make many changes.
  *
  * Assumptions: Many details are incomplete.  
  *
@@ -48,24 +48,47 @@ void list_debug_validate(list_t *L);
  */
 data_t * list_access(list_t *list_ptr, int pos_index)
 {
-    int count;
     list_node_t *L;
  
-    assert(list_ptr != NULL);
-
     /* debugging function to verify that the structure of the list is valid */
     list_debug_validate(list_ptr);
 
-    /* TODO: handle four special cases.
+	assert(list_ptr != NULL);
+
+    /* Handle four special cases.
      *   1.  The list is empty
      *   2.  Asking for the head 
      *   3.  Asking for the tail
      *   4.  Asking for invalid pos
      */
-
+	// Case 1
+	if (list_ptr->head == NULL){
+	 	return NULL;
+	}
+	// Case 4
+	else if (pos_index < 0 || pos_index >= list_ptr->current_list_size){
+		return NULL;
+	}
+	// Case 2
+	else if (pos_index == 0 || pos_index == LISTPOS_HEAD){
+		L = list_ptr->head;
+	}
+	// Case 3
+	else if (pos_index == LISTPOS_TAIL || 
+		pos_index == (list_ptr->current_list_size)-1){
+		
+		L = list_ptr->tail;
+	}
     /* we now know pos_index is for an interal element */
-    /* TODO: loop through the list until find correct position index */
-    
+    /* loop through the list until find correct position index */
+    // Given time, optimize this by searching from end for pos > 1/2 length
+	else{
+		int i;
+		L = list_ptr->head;
+		for (i = 0; i < pos_index; i++){
+			L = L->next;
+		}
+	}
     assert(L != NULL);
     return L->data_ptr;
 }
@@ -123,11 +146,36 @@ list_t * list_construct(int (*fcomp)(const data_t *, const data_t *),
 data_t * list_elem_find(list_t *list_ptr, data_t *elem_ptr, int *pos_index)
 {
     list_debug_validate(list_ptr);
+	data_t* d = NULL;
 
     /*TODO: */
     /* fix the return value */
-    *pos_index = -1;
-    return NULL;
+	// If list is empty or uninitialized return NULL and -1
+	if (list_ptr == NULL || list_ptr->head == NULL){
+		*pos_index = -1;
+		return NULL;
+	}
+	// Search for matching element
+	else{
+		*pos_index = 0;
+		list_node_t* N = list_ptr->head;
+		while (*pos_index<(list_ptr->current_list_size) 
+			&& list_ptr->comp_proc(N->data_ptr, elem_ptr) == 0 ){
+			
+			N = N->next;
+			(*pos_index)++;
+		}
+		// If we went past the end of the list, need to set pos_index
+		if (*pos_index == list_ptr->current_list_size){
+			*pos_index = -1;
+		}
+		// Otherwise, pos_index is at the correct value nad we need to set d
+		else{
+			d = N->data_ptr;
+		}
+	}
+
+    return d;
 }
 
 /* Deallocates the contents of the specified list, releasing associated memory
@@ -140,9 +188,35 @@ void list_destruct(list_t *list_ptr)
 {
     /* the first line must validate the list */
     list_debug_validate(list_ptr);
+	assert(list_ptr != NULL);
 
-    /*TODO*/
-    // Your code starts here
+	// Set up loop variables, one to lead and one to trail
+	list_node_t *A, *B;
+	// If list is empty, skip
+	if (list_ptr->head == NULL && list_ptr->tail == NULL){
+		assert(list_ptr->current_list_size == 0);
+	}
+	// If there is only 1 node
+	else if (list_ptr->current_list_size == 1){
+		free(list_ptr->head);
+	}
+	// Otherwise, there are multiple nodes
+	else{
+		// Initialize loop variables
+		A = list_ptr->head;
+		B = A->next;
+		// For each node, free the data then the node itself
+		while (B != NULL){
+			list_ptr->data_clean(A->data_ptr);
+			free(A);
+			A = B;
+			B = B->next;
+		}
+		list_ptr->data_clean(A->data_ptr);
+		free(A);
+	}
+	// Free the last node and the header block
+	free(list_ptr);
 }
 
 /* Inserts the specified data element into the specified list at the specified
@@ -171,6 +245,52 @@ void list_destruct(list_t *list_ptr)
 void list_insert(list_t *list_ptr, data_t *elem_ptr, int pos_index)
 {
     assert(list_ptr != NULL);
+
+	// Create and allocate memory for new list node
+	list_node_t *new_node = (list_node_t*)malloc(sizeof(list_node_t));
+	new_node->data_ptr = elem_ptr;
+	// If pos_index is an invalid negative value, exit the function
+	if (pos_index < 0 && pos_index != LISTPOS_HEAD && pos_index != LISTPOS_TAIL){
+		return;
+	}
+	// Insert into empty list
+	else if (list_ptr->head == NULL && list_ptr->tail == NULL){
+		new_node->prev = NULL;
+		new_node->next = NULL;
+		list_ptr->head = new_node;
+		list_ptr->tail = new_node;
+	}
+	// Insert element at head
+	else if (pos_index == 0 || pos_index == LISTPOS_HEAD){
+		new_node->prev = NULL;
+		new_node->next = list_ptr->head;
+		list_ptr->head->prev = new_node;
+		list_ptr->head = new_node;
+	}
+	// Insert element at tail
+	else if (pos_index >= list_ptr->current_list_size || pos_index == LISTPOS_TAIL){
+		new_node->prev = list_ptr->tail;
+		new_node->next = NULL;
+		list_ptr->tail->next = new_node;
+		list_ptr->tail = new_node;
+	}
+	// Insert element anywhere else in the list
+	else{
+		list_node_t *front = list_ptr->head;
+		list_node_t *back;
+		int i;
+		// Get the node currently at pos_index
+		for (i = 0; i < pos_index; i++){
+			front = front->next;
+		}
+		back = front->prev;
+		new_node->prev = back;
+		back->next = new_node;
+		new_node->next = front;
+		front->prev = new_node;
+	}
+	// Add one to list size
+	(list_ptr->current_list_size)++;
 
     /*TODO*/
     /* the last two lines of this function must be the following */
@@ -212,10 +332,36 @@ void list_insert_sorted(list_t *list_ptr, data_t *elem_ptr)
 {
     assert(list_ptr != NULL);
     assert(list_ptr->list_sorted_state != LIST_UNSORTED);
+	int index;
+	int current_state = list_ptr->list_sorted_state;
 
     /* insert your code here */
     /*TODO*/
-
+	// Place data if list is empty
+	if (list_ptr->head == NULL && list_ptr->tail == NULL){
+		index = 0;
+	}
+	// Find the index at which to place the data
+	index = 0;
+	list_node_t *node = list_ptr->head;
+	// Find index for ascending sort
+	if (list_ptr->list_sorted_state == LIST_SORTED_ASCENDING){
+		while (node != NULL && list_ptr->comp_proc(node->data_ptr,elem_ptr) != -1){
+			index++;
+			node = node->next;
+		}
+	}
+	// Find index for descending sort
+	else if (list_ptr->list_sorted_state == LIST_SORTED_DESCENDING){
+		while (node != NULL && list_ptr->comp_proc(node->data_ptr,elem_ptr) != 1){
+			index++;
+			node = node->next;
+		}
+	}
+	// Use the list_insert() function to insert at the found index
+	list_insert(list_ptr, elem_ptr, index);
+	// Reset the list state
+	list_ptr->list_sorted_state = current_state;
     /* the last line of this function must be the following */
     list_debug_validate(list_ptr);
 }
@@ -236,10 +382,74 @@ void list_insert_sorted(list_t *list_ptr, data_t *elem_ptr)
 data_t * list_remove(list_t *list_ptr, int pos_index)
 {
     list_debug_validate(list_ptr);
+	// NOTE: we could write less code by using the list_access() function to 
+	// return the desired data, but I decided instead to repeat some of that
+	// code here to avoid having to traverse the list a second time for removal.
 
-    /* fix the return value */
-    return NULL;
+	list_node_t *lead, *follow, *removed;
+	data_t *data;
+
+	// If the list does not exist, the list is empty, or the given index
+	// does not exist, return NULL.
+	if (list_ptr == NULL || (list_ptr->head == NULL && list_ptr->tail == NULL)
+		|| (pos_index < 0 && pos_index != LISTPOS_HEAD && pos_index != LISTPOS_TAIL)
+		|| pos_index >= list_ptr->current_list_size){
+		
+		return NULL;
+	}
+	// If there is only 1 node and the head or tail is chosen, remove it
+	else if ((pos_index == 0 ||pos_index == LISTPOS_HEAD 
+	|| pos_index == LISTPOS_TAIL) 
+		&& list_ptr->current_list_size == 1){
+
+		removed = list_ptr->head;
+		data = removed->data_ptr;
+		list_ptr->head = NULL;
+		list_ptr->tail = NULL;
+	}
+	// Remove the list head if requested
+	else if (pos_index == 0 || pos_index == LISTPOS_HEAD){
+		follow = list_ptr->head;
+		removed = follow;
+		data = follow->data_ptr;
+		lead = follow->next;
+		lead->prev = NULL;
+		list_ptr->head = lead;
+	}
+	// Remove the list tail if requested
+	else if (pos_index == (list_ptr->current_list_size)-1
+		|| pos_index == LISTPOS_TAIL){
+		
+		lead = list_ptr->tail;
+		removed = lead;
+		data = lead->data_ptr;
+		follow = lead->prev;
+		follow->next = NULL;
+		list_ptr->tail = follow;
+	}
+	// Remove any other node requested
+	else{
+		removed = list_ptr->head;
+		// Get to the index given
+		int i;
+		for (i = 0; i < pos_index; i++){
+			removed = removed->next;
+		}
+		data = removed->data_ptr;
+		follow = removed->prev;
+		lead = removed->next;
+		follow->next = lead;
+		lead->prev = follow;
+	}	
+	// Decrement the list size
+	(list_ptr->current_list_size)--;
+	// Free the removed node memory
+	free(removed);
+	// Prove that the data has been found if the function reached this point.
+    assert(data != NULL);
+	return data;
 }
+
 
 /* Reverse the order of the elements in the list.  Also change the 
  * list_sorted_state flag.  This function can only be called on a list
@@ -250,8 +460,35 @@ data_t * list_remove(list_t *list_ptr, int pos_index)
 void list_reverse(list_t *list_ptr)
 {
     assert(list_order(list_ptr) != 0);
-    /*TODO*/
-
+	// If the list does not exist, is empty, or only has 1 element, we don't
+	// need to do anything
+	if (list_ptr == NULL || (list_ptr->head == NULL && list_ptr->tail == NULL)
+		|| list_ptr->head == list_ptr->tail){
+	}
+	// If the list has only 1 element, skip this and just change the state
+	else if (list_ptr->head != list_ptr->tail){
+		// Otherwise, swap the prev and next pointers at each node
+		list_node_t *node, *temp;
+		node = list_ptr->head;
+		// Set the first node as the new tail
+		list_ptr->tail = node;
+		// Swap prev and next
+		while (node != NULL){
+			temp = node->prev;
+			node->prev = node->next;
+			node->next = temp;
+			node = node->prev;
+		}
+		// Set the last node as the new head
+		list_ptr->head = temp->prev;
+	}
+	// Reverse the list_sorted_state
+	if (list_ptr->list_sorted_state == LIST_SORTED_ASCENDING){
+		list_ptr->list_sorted_state = LIST_SORTED_DESCENDING;
+	}
+	else if (list_ptr->list_sorted_state == LIST_SORTED_DESCENDING){
+		list_ptr->list_sorted_state = LIST_SORTED_ASCENDING;
+	}
     // after the list is reversed verify it is valid.
     list_debug_validate(list_ptr);
 }
@@ -302,7 +539,7 @@ int list_order(list_t *list_ptr)
  *
  * The function produces no output if the two-way linked list is correct.  It
  * causes the program to terminate and print a line beginning with "Assertion
- * failed:" if an error is detected.
+ * foailed:" if an error is detected.
  *
  * The checks are not exhaustive, so an error may still exist in the
  * list even if these checks pass.

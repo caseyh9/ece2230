@@ -35,6 +35,5 @@ typedef struct task_info {
 /* the list ADT works on task data of this type */
 typedef task_t data_t;
 
-
 /* commands for vim. ts: tabstop, sts: soft tabstop sw: shiftwidth */
 /* vi:set ts=8 sts=4 sw=4 et: */

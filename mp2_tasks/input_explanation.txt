@@ -1,0 +1,24 @@
+To start the testing, run the lab2 executable with a 10 element list.
+Next, try each possible input (except insert and add tail) to ensure there are no errors
+due to an empty list. The only one of these commands that should have an effect
+is REVERSE, which changes the list to descending order. As you can see in the output in
+test_output.txt, each function prints out the appropriate error message
+(or lack thereof) when tested with an empty list.
+
+Next, we insert a single element into the list, then test all of the non-adding functions
+again. Every time one of these function removes an element, we add it back, alternating
+between INSERT and ADDTAIL to test both of these. Obviously, we must move QUIT to the
+end of these additional instructions. While doing this, we test inputs that require
+a position to be specified three times, once with the only valid position (0), once with
+a positive invalid position, and once with a negative invalid position. 
+
+The last line of testing is to fill the list with a number of values and then perform
+several functions on a full list, while doing this, we also attempt to add an element
+past the end of the list to ensure that the list boundary functions properly. Also note
+that while filling the list, each member is assigned an id and priority that corresponds to its
+position in the list (until they move too much) so that we can see easily that
+instructions such as FIND and REMOVE are working correctly. This is why we use a list
+of length 10, it is easier to fill all the way. Note that thevalgrind output from all
+these tests is available in a separate file, valgrind_output.txt. For each instruction
+where boundaries exist, we check those boundary cases, i.e. accessing the first
+element, accessing the last element, adding the the beginning, adding to the end, etc.
