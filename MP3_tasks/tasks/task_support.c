@@ -1,14 +1,15 @@
-/* task_support.c         <<-- A template
- * Prof. Calhoun          <<-- many updates required
- * jonccal
+/* task_support.c
+ * Casey Hird
+ * crhird
  * ECE 2230 Spring 2018
  * MP3
  *
- * Propose: A template for MP3
+ * Propose: Implements the doubly linked list defined in list.h and list.c
+ * create unsorted and sorted list of type data_t.
  *
- * Assumptions:
+ * Assumptions: All functions in list.c are implemented correctly.
  *
- * Bugs:
+ * Bugs: No known bugs.
  *
  * You can modify the interface for any of the task_ functions if you like
  * But you must clearly document your changes.
@@ -22,6 +23,7 @@
 #include <string.h>
 #include <ctype.h>
 #include <assert.h>
+#include <time.h>
 
 #include "datatypes.h"
 #include "list.h"
@@ -37,11 +39,29 @@ char* state2str(enum state state);           // Converts enum to ASCII
 void print_task_rec_short(task_t *rec);      // print one record
 void print_task_rec_long(task_t *rec) ;      // print one record
 
+// My helper functions
+task_t* find_id(list_t* list_ptr, int id, int *index);
 
-/* Function to create a list using list_insert() TODO: recomment
+/*
+	Creates and adds a task with only a priority to the given list.
+	The priority of this task is equal to the value provided and
+	all other values are equal to zero.
+
+	list_ptr: the list to be added to
+
+	priority: the priority of the task being created and added
+
+	postcondition: a task with priority = priority and all other
+	values = 0 is added to the tail of list_ptr
 */
 void task_list_add_tail_mp3(list_t * list_ptr, int priority)
 {
+	// Allocate memory with all vallues intialized to zero
+	task_t *rec_ptr = (task_t*) calloc(1, sizeof(task_t));
+	// Set priority
+	rec_ptr->priority = priority;
+	// Add to tail
+	list_insert(list_ptr, rec_ptr, list_size(list_ptr));
 }
 
 /* Function to sort a list using a given method and direction
@@ -50,20 +70,20 @@ void task_list_add_tail_mp3(list_t * list_ptr, int priority)
 void task_list_sort(list_t ** list_ptr, int sort_type, int sort_order)
 {
     /*TODO: sort the list */
-    /*
+    
     clock_t start, end;
     double elapse_time;  // time in milliseconds
     int initial_size = list_size(*list_ptr);
     start = clock();
-    */
+    
     list_sort(list_ptr, sort_type, sort_order);
 
-    /*
+    
     end = clock();
     elapse_time =  1000.0 * ((double) (end - start)) / CLOCKS_PER_SEC;
     assert(list_size(*list_ptr) == initial_size);
     printf("Sorting: n = %d time = %f type = %d order = %d\n", initial_size, elapse_time, sort_type, sort_order);
-    */
+    
 
 }
 
@@ -143,7 +163,7 @@ void task_list_print(list_t * list_ptr, char *list_type)
 
     int i, num_in_list;
 
-    num_in_list = 0; // fix
+    num_in_list = list_ptr->current_list_size; // fix
     task_t *rec_ptr = NULL;  // fix
 
 
@@ -155,7 +175,7 @@ void task_list_print(list_t * list_ptr, char *list_type)
 
         for (i = 0; i < num_in_list; i++) {
             printf("%4d: ", i);
-            rec_ptr = NULL;    // fix to grab record at pos i!
+            rec_ptr = list_access(list_ptr, i);   // fix to grab record at pos i!
             print_task_rec_short(rec_ptr);
         }
     }

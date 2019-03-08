@@ -1,17 +1,17 @@
-/* task_support.h       <<-- A template:
- * Prof. Calhoun        <<-- some changes needed
- * jonccal
+/* task_support.h
+ * Casey Hird
+ * crhird
  * ECE 2230 Spring 2019
  * MP3
  *
- * Propose: A template for MP3
+ * Propose: definitions of public functions in task_support.c
  *
  * Assumptions: suggested structure definitions and public functions 
  *              as defined for assignmnet.  
  *
  *              You may change this file if needed for your design.
  *
- * Bugs:
+ * Bugs: no known bugs.
  *
  */
 

@@ -19,7 +19,7 @@
 
 
 CC     = gcc
-CFLAGS = -Wall -g -DVALIDATE
+CFLAGS = -O
 
 lab3 : list.o task_support.o lab3.o
 	$(CC) $(CFLAGS) list.o task_support.o lab3.o -o lab3

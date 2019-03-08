@@ -1,14 +1,15 @@
-/* list.c                  <<-- A template to update and
- * Prof. Calhoun           <<-- change
- * jonccal
+/* list.c
+ * Casey Hird
+ * crhird
  * ECE 2230 Spring 2019
  * MP3
  *
- * Propose: A template for list.c. You will make many changes.
+ * Propose: Implements the functions defined in list.h to create a
+ * doubly linked list.
  *
- * Assumptions: Many details are incomplete.
+ * Assumptions: All functions are used as defined in list.h.
  *
- * Bugs: Many details have not been implemented.
+ * Bugs: No known bugs.
  *
  * The interface definition for the two-way linked list ADT is based on one
  * defined by OPNET, Inc. http://www.opnet.com/
@@ -35,6 +36,12 @@ void list_selection_sort(list_t** L, int sort_order);
 void list_merge_sort(list_t** L, int sort_order);
 
 /* sorting helper functions) */
+void swap(list_node_t *A, list_node_t *B);
+void SelectionSort(list_t** L, list_node_t* start, list_node_t* end, int sort_order);
+list_node_t* find_max(list_t* L, list_node_t* start, list_node_t* end);
+list_node_t* find_min(list_t* L, list_node_t* start, list_node_t* end);
+void halve_list(list_t **L, list_t** left, list_t** right);
+void merge_lists(list_t **L, list_t **left, list_t **right, int sort_order);
 
 /* Sorts a list used a specific sorting algorithm and direction.
  *
@@ -52,22 +59,105 @@ void list_merge_sort(list_t** L, int sort_order);
  */
 void list_sort(list_t **list_ptr, int sort_type, int sort_order)
 {
-    /* TODO: Complete the function sorting the list */
+	// Assert that neither the pointer to the list pointer
+	// nor the list pointer itself is null.
+	assert(list_ptr != NULL && *list_ptr != NULL);
 
-   (*list_ptr)->list_sorted_state = LIST_SORTED_ASCENDING;// ? is ASCENDING or DESCENDING;
-    list_debug_validate(*list_ptr);
+	// If the list has more than 1 element, sort it
+	if ((*list_ptr)->current_list_size > 1)
+	{
+		// Select the appropriate sort function
+		switch (sort_type)
+		{
+			case 1:
+				list_bubble_sort(list_ptr, sort_order);
+				break;
+			case 2:
+				list_insertion_sort(list_ptr, sort_order);
+				break;
+			case 3:
+				list_recursive_selection_sort(list_ptr, sort_order);
+				break;
+			case 4:
+				list_selection_sort(list_ptr, sort_order);
+				break;
+			case 5:
+				list_merge_sort(list_ptr, sort_order);
+				break;
+		}
+
+	}
+
+	// Set the given list order
+	if (sort_order == 1)
+		(*list_ptr)->list_sorted_state = LIST_SORTED_DESCENDING;
+	else
+		(*list_ptr)->list_sorted_state = LIST_SORTED_ASCENDING;
+    //list_debug_validate(*list_ptr);
 }
 
 /* Sorting the list via the insertion sort algorithm
  *
  * L: pointer to list-of-interest.
  *
+ * Precondition: (*L)->current_list_size > 1
+ *
  * sort_order: 1 sort list in descending order 2 sort in ascending order
  */
 void list_bubble_sort(list_t** L, int sort_order)
 {
-    /* TODO: see MP3 document for implementation notes */
+	// assert the precondition
+	assert((*L)->current_list_size > 1);
+	// Define a comparison based on the given sort_order that will be used
+	// to compare elements.
+	int compare;
+	if (sort_order == 1)
+		compare = 1;
+	else
+		compare = -1;
+	int length = (*L)->current_list_size;
+	int i, j;
+	// Start with head node
+	list_node_t *node = (*L)->head;
+	for (i = 0; i < length-1; i++)
+	{
+		for (j = 0; j < length-i-1; j++)
+		{
+			// comp_proc returns 1 if the elements are already in ascending order
+			// and -1 if they are in descending order
+			if ((*L)->comp_proc(node->data_ptr,node->next->data_ptr) == compare)
+				// Swap node and node->next
+				swap(node,node->next);
+			// Move to the next node
+			node = node->next;
+		}
+		// Start over at head node
+		node = (*L)->head;
+	}
 }
+
+/*
+	Swap 2 nodes in a given list.
+
+	A: pointer to the front node
+
+	B: pointer to the rear node
+
+	Preconditions: nodes A and B are in the same list
+
+	Postcondition: nodes A and B have switched positions
+*/
+void swap(list_node_t *A, list_node_t *B)
+{
+	// Swap the data pointers between the two nodes
+	data_t *temp = A->data_ptr;
+	A->data_ptr = B->data_ptr;
+	B->data_ptr = temp;
+
+	// Avoid dangling pointer
+	temp = NULL;
+}
+
 
 /* Sorting the list via the insertion sort algorithm
  *
@@ -77,7 +167,28 @@ void list_bubble_sort(list_t** L, int sort_order)
  */
 void list_insertion_sort(list_t** L, int sort_order)
 {
-    /* TODO: see MP3 document for implementation notes */
+	// assert the precondition
+	assert((*L)->current_list_size > 1);
+
+	// Create new list
+	list_t *new_list = list_construct((*L)->comp_proc, (*L)->data_clean);
+	// Set new_list order
+	if (sort_order == 1)
+		new_list->list_sorted_state = LIST_SORTED_DESCENDING;
+	else
+		new_list->list_sorted_state = LIST_SORTED_ASCENDING;
+	// Create pointer to hold data
+	int length = (*L)->current_list_size;
+	int i;
+	for (i = 0; i < length; i++)
+	{
+		// Remove the head of the old list (which will be a new node each time)
+		// and insert into the new sorted list.
+		list_insert_sorted(new_list, list_remove(*L,0));
+	}
+	// Destruct old list and point to new list
+	list_destruct(*L);
+	*L = new_list;
 }
 
 /* Sorting the list via the recursive selection sort algorithm
@@ -88,8 +199,104 @@ void list_insertion_sort(list_t** L, int sort_order)
  */
 void list_recursive_selection_sort(list_t** L, int sort_order)
 {
+	// assert the precondition
+	assert((*L)->current_list_size > 1);
+	// Check that the list ponter is not null
+	assert(L != NULL && (*L) != NULL);
 
-    /* TODO: see MP3 document for implementation notes */
+	SelectionSort(L, (*L)->head, (*L)->tail, sort_order);
+}
+
+/*
+	Sorts the list with a recursive selection sort algorithm.
+
+	L: pointer to the list to be sorted
+
+	start: the first node in the list being sorted
+
+	end: the last node in the list being sorted
+
+    sort_order: 1 sort list in descending order 2 sort in ascending order	
+
+	precondition: start is not later in the list than end
+*/
+void SelectionSort(list_t** L, list_node_t* start, list_node_t* end, int sort_order)
+{
+	list_node_t* swap_node;
+
+	// If there is >1 node in the list, find the node to be swapped
+	if (start != end)
+	{
+		if (sort_order == 1)
+			swap_node = find_max(*L, start, end);
+		else
+			swap_node = find_min(*L, start, end);
+	
+		// Swap the node at the beginning and the node found
+		swap(start, swap_node);
+
+		// Call this function on the smaller list
+		SelectionSort(L, start->next, end, sort_order);
+	}
+	swap_node = NULL;
+}
+
+/*
+	Finds the max node on a range in a given list.
+	Returns a pointer to the max node.
+
+	L: the list to be searched
+
+	start: the first position to be searched
+
+	end: the last position to be searched
+*/
+list_node_t* find_max(list_t* L, list_node_t* start, list_node_t* end)
+{
+	// Set max equal to start node
+	list_node_t* max = start;
+
+	// Find the max node
+	list_node_t* search_node = max->next;
+	while (search_node != NULL)
+	{
+		// Set max to node if node data > max data
+		if (L->comp_proc(max->data_ptr, search_node->data_ptr) == 1)
+			max = search_node;
+		search_node = search_node->next;
+	}
+	// Should have reached the end of the list
+	assert(search_node == NULL);
+	return max;
+}
+
+/*
+	Finds the min node on a range in a given list.
+	Returns a pointer to the min node.
+
+	L: the list to be searched
+
+	start: the first position to be searched
+
+	end: the last position to be searched
+*/
+list_node_t* find_min(list_t* L, list_node_t* start, list_node_t* end)
+{
+	// Set max equal to the node at position start
+	list_node_t* min = start;
+
+	// Find the max node
+	list_node_t* search_node = min->next;
+	while (search_node != NULL)
+	{
+		// Set min to node if node data < min data
+		if (L->comp_proc(min->data_ptr, search_node->data_ptr) == -1)
+			min = search_node;
+		search_node = search_node->next;
+	}
+	// Should have reached the end of the list
+	assert(search_node == NULL);
+	return min;
 }
 
 /* Sorting the list via the selection sort algorithm
@@ -100,8 +307,43 @@ void list_recursive_selection_sort(list_t** L, int sort_order)
  */
 void list_selection_sort(list_t** L, int sort_order)
 {
-    /* TODO: see MP3 document for implementation notes */
+	// assert the precondition
+	assert((*L)->current_list_size > 1);
+	// Set up for comparison direction
+	int compare;
+	if (sort_order == 1)
+		compare = 1;
+	else
+		compare = -1;
+	int i;
+	int start = 0;
+	int end = (*L)->current_list_size - 1;
+	list_node_t *start_node, *swap_node, *search_node;
+	while (start < end)
+	{
+		// Find start_node for this iteration
+		start_node = (*L)->head;
+		for (i = 0; i < start; i++)
+			start_node = start_node->next;
+		
+		// Find the swap node (min or max) between start and end
+		assert(i == start);
+		i++;
+		swap_node = start_node;
+		search_node = swap_node->next;
+		while (i <= end)
+		{
+			if ((*L)->comp_proc(swap_node->data_ptr, search_node->data_ptr) == compare)
+				swap_node = search_node;
+			search_node = search_node->next;
+			i++;
+		}
 
+		// Swap swap_node and start_node;
+		swap(start_node, swap_node);
+	
+		start++;
+	}
 }
 
 /* Sorting the list via the merge sort algorithm
@@ -112,12 +354,130 @@ void list_selection_sort(list_t** L, int sort_order)
  */
 void list_merge_sort(list_t** L, int sort_order)
 {
-    /* TODO: see MP3 document for implementation notes */
-
+	int length = (*L)->current_list_size;
+	// Do nothing if there is one element in the list
+	if (length > 1)
+	{
+		// Create two lists to hold the halves
+		list_t *left = list_construct((*L)->comp_proc, (*L)->data_clean);
+		list_t *right = list_construct((*L)->comp_proc, (*L)->data_clean);
+		// Divide the list int two halves
+		halve_list(L, &left, &right);
+		// Sort both smaller lists
+		list_merge_sort(&left, sort_order);
+		list_merge_sort(&right, sort_order);
+		// Merge lists left and right
+		merge_lists(L, &left, &right, sort_order);
+	}
 }
 
+/*
+	Removes the elements from one list and places half of them
+	into one list and the other half in another.
 
+	L: the list which holds the elements to be removed
 
+	left: the list which will hold the first half of L's elements
+
+	right: the list which will hold the second half of L's elements
+*/
+void halve_list(list_t **L, list_t** left, list_t** right)
+{
+	// Find length of a half list
+	int half_length = (*L)->current_list_size / 2;
+	// Find the midpoint
+	list_node_t *midpoint = (*L)->head;
+	int i;
+	for (i = 1; i < half_length; i++)
+		midpoint = midpoint->next;
+	// Assign left list
+	(*left)->head = (*L)->head;
+	(*left)->tail = midpoint;
+	(*left)->current_list_size = half_length;
+	// Assign right list
+	(*right)->head = midpoint->next;
+	(*right)->tail = (*L)->tail;
+	// Break lists apart be setting ends to NULL
+	(*left)->tail->next = NULL;
+	(*right)->head->prev = NULL;
+	// Make right an element shorter if L had an odd number of elements
+	if ((*L)->current_list_size % 2 == 0)
+		(*right)->current_list_size = half_length;
+	else
+		(*right)->current_list_size = half_length+1;
+	// Deallocate the list L and remove the dangling pointer
+	free(*L);
+	*L = NULL;
+}
+
+/*
+	Merges two lists into a single sorted list.
+
+	L: intially empty list that will finish will all elements from the
+	other two lists sorted according to sort_order
+
+	left: one sublist that will have its elements moved
+
+	right: the other sublist that will have its elements moved
+
+	sort_order: 1 sort list in descending order 2 sort in ascending order
+*/
+void merge_lists(list_t **L, list_t **left, list_t **right, int sort_order)
+{
+	// Determine how to compare elements based on the sort order
+	int compare;
+	if (sort_order == 1)
+		compare = -1;
+	else
+		compare = 1;
+	// Allocate the new merged list
+	*L = list_construct((*left)->comp_proc, (*left)->data_clean);
+	int num_elements =(*left)->current_list_size + (*right)->current_list_size;
+	int i;
+	data_t* data;
+	// Do this while there are elements remaining in either half list
+	//while (!((*left)->current_list_size == 0 && 
+	//	(*right)->current_list_size == 0))
+	for (i = 0; i < num_elements; i++)
+	{
+		// If the left list is empty, take from the right
+		if ((*left)->current_list_size == 0)
+		{
+			data = list_remove(*right, 0);
+			list_insert(*L, data, LISTPOS_TAIL);
+		}
+
+		// If the right list is empty, take from the left
+		else if ((*right)->current_list_size == 0)
+		{
+			data = list_remove(*left, 0);
+			list_insert(*L, data, LISTPOS_TAIL);
+		}
+
+		// If neither list is empty, compare the heads of the lists,
+		// and take from the appropriate list
+		else
+		{
+			// Compare the list heads
+			if ((*L)->comp_proc((*left)->head->data_ptr,
+				(*right)->head->data_ptr) == compare)
+			{
+				data = list_remove(*left, 0);
+				list_insert(*L, data, LISTPOS_TAIL);
+			}
+			else
+			{
+				data = list_remove(*right, 0);
+				list_insert(*L, data, LISTPOS_TAIL);
+			}
+		}
+	}
+	// Destroy the two smaller lists and remove dangling pointers
+	list_destruct(*left);
+	list_destruct(*right);
+	*left = NULL;
+	*right = NULL;
+}
 
 /* ----- below are the functions  ----- */
 
@@ -378,7 +738,6 @@ void list_insert(list_t *list_ptr, data_t *elem_ptr, int pos_index)
 	// Add one to list size
 	(list_ptr->current_list_size)++;
 
-    /*TODO*/
     /* the last two lines of this function must be the following */
     if (list_ptr->list_sorted_state != LIST_UNSORTED)
         list_ptr->list_sorted_state = LIST_UNSORTED;

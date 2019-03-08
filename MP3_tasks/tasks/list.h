@@ -1,4 +1,8 @@
 /* list.h 
+ * Casey Hird
+ * crhird
+ * ECE 2230 Spring 2019
+ * MP3
  *
  * Public functions for two-way linked list
  *

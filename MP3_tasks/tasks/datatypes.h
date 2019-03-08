@@ -1,6 +1,6 @@
 /* datatypes.h 
- * Prof. Calhoun 
- * jonccal 
+ * Casey Hird
+ * crhird
  * ECE 2230 Spring 2019
  * MP3
  *
