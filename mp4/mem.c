@@ -104,11 +104,18 @@ void Mem_free(void *return_ptr)
 void *Mem_alloc(int nbytes) {
     /* assert preconditions */
     assert(nbytes > 0);
+    // Determine how many chunk sized units are needed
+    nunits = (nbytes / SIZEOF_CHUNK_T) + SIZEOF_CHUNK_T;
+    if (nbytes % nbytes != 0)
+    {
+      nunits += SIZEOF_CHUNK_T;
+    }
     // Save search start location
     chunk_t *start;
     if (SearchLoc == HEAD_FIRST)
     {
-      start = &Dummy;
+      Rover = &Dummy;
+      start = Rover;
     }
     else if (SearchLoc == ROVER_FIRST)
     {
@@ -119,21 +126,59 @@ void *Mem_alloc(int nbytes) {
       printf("Invalid search position.\n");
       exit(1);
     }
-    // Search for a big enough block
+    // Search for a big enough block according to search policy
+    chunk_t *removal_spot;
+    long removal_size = Rover->size;
     // First fit
     if (SearchPolicy == FIRST_FIT)
     {
-
+      do {
+        // Keep the first chunk that is big enough
+        if (Rover->size >= nunits-1)
+        {
+          removal_size = Rover->size;
+          removal_spot = Rover;
+        }
+        Rover = Rover->next;
+      } while (removal_spot == NULL && Rover != start);
     }
     // Best fit
     else if (SearchPolicy == BEST_FIT)
     {
-
+      removal_spot = Rover;
+      do {
+        if (Rover->size >= nunits-1 && Rover-size < removal_size)
+        {
+          removal_size = Rover->size;
+          removal_spot = Rover;
+        }
+      } while(removal_size != nunits-1 && Rover != start);
+      // If best fit is still too small, set removal_spot to NULL
+      if (removal_size < nunits-1)
+      {
+        removal_spot = NULL;
+      }
     }
     // Worst fit
     else if (SearchPolicy == WORST_FIT)
     {
-
+      int max_size = removal_size;
+      removal_spot = Rover;
+      // Find the biggest free chunk
+      do {
+        // If a bigger chunk is found, save that size and position
+        if (Rover->size > max_size)
+        {
+          removal_size = Rover->size;
+          removal_spot = Rover;
+        }
+        Rover = Rover->next;
+      } while (Rover != start);
+      // If max size is still too small, set removal_spot to NULL
+      if (removal_size < nunits-1)
+      {
+        removal_spot = NULL;
+      }
     }
     // Error
     else
@@ -141,6 +186,50 @@ void *Mem_alloc(int nbytes) {
       printf("Not a valid search policy.\n");
       exit(1);
     }
+    // If a large enough chunk was not found, add memory to the
+    // free list using morecore
+    if (removal_spot == NULL)
+    {
+      removal_size = nunits;
+      // FIXME DOES IT MATTER WHERE MEMORY IS ADDED???????????????????????????????
+      // Increase nunits to be a multiple of PAGESIZE
+      if (removal_size % PAGESIZE != 0)
+      {
+        removal_size += PAGESIZE - (removal_size % PAGESIZE);
+      }
+      removal_spot = Rover->next;
+      Rover->next = morecore(removal_size);
+      Rover = Rover->next;
+      removal_size--;
+      Rover->size = removal_size;
+      Rover->next = removal_spot;
+      removal_spot = Rover;
+      Rover = Rover->next;
+    }
+    // User Rover to find chunk before removal_spot
+    while (Rover->next != removal_spot)
+    {
+      Rover = Rover->next;
+    }
+    // Adjust header block for chunk that will remain
+    if (removal_size > nunits-1)
+    {
+      // Skip over chunk being removed
+      Rover->next = removal_spot + nunits;
+      Rover = Rover->next;
+      // Connect new header to the free list
+      Rover-next = removal_spot->next;
+      Rover->size = removal_size - (nunits-1);
+      // Remove old header dangling pointer
+      removal_spot->next = NULL;
+    }
+    // Skip that if chunk was a perfect fit
+    else{
+      Rover->next = removal_spot->next;
+      removal_spot->next = NULL;
+    }
+    // Return pointer to free Memory
+    return removal_spot++;
 }
 
 /* prints stats about the current free list

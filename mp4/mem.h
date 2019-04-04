@@ -1,14 +1,14 @@
-/* mem.h 
- * Prof. Calhoun 
- * jonccal 
+/* mem.h
+ * Prof. Calhoun
+ * jonccal
  * ECE 2230 Spring 2019
  * MP4
  *
  * Propose: Defines the interface for our version of malloc/free. Also provides
  *               profiling and debugging infomation about the heap
  *
- * Assumptions: suggested structure definitions and public functions 
- *              as defined for assignment.  
+ * Assumptions: suggested structure definitions and public functions
+ *              as defined for assignment.
  *
  * Bugs: None known.
  */
@@ -38,7 +38,7 @@ void *Mem_alloc(int nbytes);
 void Mem_stats(void);
 void Mem_print(void);
 
-#define SIZEOF_CHUNK_T 8  /* for debugging and test drivers */
+#define SIZEOF_CHUNK_T 16  /* for debugging and test drivers */
 
 
 /* vi:set ts=8 sts=4 sw=4 et: */
