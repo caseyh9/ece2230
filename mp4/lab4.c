@@ -1,8 +1,8 @@
 /* lab4.c
- * Prof. Calhoun          <<-- updates required
- * jonccal
+ * Casey Hird
+ * crhird
  * ECE 2230 Spring 2019
- * MP3
+ * MP4
  *
  * Purpose:
  * --------
@@ -172,8 +172,6 @@ int main(int argc, char **argv)
         Mem_stats();
         printf("\n----- End unit test driver 1 -----\n");
     }
-
-
     // add your unit test drivers here to test for special cases such as
     //   -- request the number of bytes that matches a whole page, and a 
     //      size that is one unit smaller than a page
@@ -182,7 +180,6 @@ int main(int argc, char **argv)
     //   -- demonstrate all patterns in coalescing
     //   -- show that rover spreads allocatins in list and does not cluster
     //      fragments at head of the free list
-
     exit(0);
 }
 

@@ -88,7 +88,7 @@ chunk_t *morecore(int new_bytes)
 
     /* update statistics */
     stats.numSbrkCalls++;
-    stats.numPages = new_bytes/PAGESIZE;
+    stats.numPages += new_bytes/PAGESIZE;
 
     return new_p;
 }
@@ -101,7 +101,7 @@ void Mem_free(void *return_ptr)
     return;
   }
   // Set return_pos to point to the header
-  chunk_t *header = (chunk_t*) (return_ptr - SIZEOF_CHUNK_T;
+  chunk_t *header = (chunk_t*) (return_ptr - SIZEOF_CHUNK_T);
   chunk_t *temp = Rover->next;
   Rover->next = header;
   header->next = temp;
@@ -114,7 +114,7 @@ void *Mem_alloc(int nbytes) {
     /* assert preconditions */
     assert(nbytes > 0);
     // Determine how many chunk sized units are needed
-    nunits = (nbytes / SIZEOF_CHUNK_T) + 1;
+    long nunits = (nbytes / SIZEOF_CHUNK_T) + 1;
     if (nbytes % SIZEOF_CHUNK_T != 0)
     {
       nunits++;
@@ -212,6 +212,7 @@ void *Mem_alloc(int nbytes) {
       removal_spot->size = removal_size;
       Rover->next = removal_spot;
       removal_spot->next = temp;
+	  removal_spot->size = removal_size;
       temp = NULL;
     }
     // If morecore returned NULL, return NULL
@@ -231,10 +232,11 @@ void *Mem_alloc(int nbytes) {
       Rover->next = removal_spot + nunits;
       Rover = Rover->next;
       // Connect new header to the free list
-      Rover-next = removal_spot->next;
-      Rover->size = removal_size - nunits - 1;
+      Rover->next = removal_spot->next;
+      Rover->size = removal_size - nunits;
       // Remove old header dangling pointer
       removal_spot->next = NULL;
+	  removal_spot->size = nunits-1;
     }
     // Skip that if chunk was a perfect fit
     else{
@@ -284,6 +286,11 @@ void Mem_stats(void)
     stats.totalBytes *= SIZEOF_CHUNK_T;
     // Calculate average size
     stats.average = stats.totalBytes / stats.numItems;
+	
+	// print ish
+
+    printf("\n\n\nstats.totalBytes = %d and  stats.numPages*PAGESIZE = %d\n\n\n", stats.totalBytes, stats.numPages*PAGESIZE);
+
 
     /* ======= DO NOT MODIFY FROM HERE TO END OF Mem_stats() ======= */
     printf("\n\t\tMP4 Heap Memory Statistics\n"
