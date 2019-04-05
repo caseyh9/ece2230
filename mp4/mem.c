@@ -96,12 +96,15 @@ chunk_t *morecore(int new_bytes)
 /* TODO update this documentation according to the programming guide */
 void Mem_free(void *return_ptr)
 {
-  // Set return_ptr to point to the header
-  chunk_t *return_pos = (chunk_t*) return_ptr;
-  return_pos--;
+  if (return_ptr == NULL)
+  {
+    return;
+  }
+  // Set return_pos to point to the header
+  chunk_t *header = (chunk_t*) (return_ptr - SIZEOF_CHUNK_T;
   chunk_t *temp = Rover->next;
-  Rover->next = return_pos;
-  return_pos->next = temp;
+  Rover->next = header;
+  header->next = temp;
   Rover = temp;
   temp = NULL;
 }
@@ -111,10 +114,10 @@ void *Mem_alloc(int nbytes) {
     /* assert preconditions */
     assert(nbytes > 0);
     // Determine how many chunk sized units are needed
-    nunits = (nbytes / SIZEOF_CHUNK_T) + SIZEOF_CHUNK_T;
-    if (nbytes % nbytes != 0)
+    nunits = (nbytes / SIZEOF_CHUNK_T) + 1;
+    if (nbytes % SIZEOF_CHUNK_T != 0)
     {
-      nunits += SIZEOF_CHUNK_T;
+      nunits++;
     }
     // Save search start location
     chunk_t *start;
@@ -133,7 +136,7 @@ void *Mem_alloc(int nbytes) {
       exit(1);
     }
     // Search for a big enough block according to search policy
-    chunk_t *removal_spot;
+    chunk_t *removal_spot = NULL;
     long removal_size = Rover->size;
     // First fit
     if (SearchPolicy == FIRST_FIT)
@@ -153,12 +156,13 @@ void *Mem_alloc(int nbytes) {
     {
       removal_spot = Rover;
       do {
-        if (Rover->size >= nunits-1 && Rover-size < removal_size)
+        if (Rover->size >= nunits-1 && Rover->size < removal_size)
         {
           removal_size = Rover->size;
           removal_spot = Rover;
         }
-      } while(removal_size != nunits-1 && Rover != start);
+        Rover = Rover->next;
+      } while (removal_size != nunits-1 && Rover != start);
       // If best fit is still too small, set removal_spot to NULL
       if (removal_size < nunits-1)
       {
@@ -168,7 +172,7 @@ void *Mem_alloc(int nbytes) {
     // Worst fit
     else if (SearchPolicy == WORST_FIT)
     {
-      int max_size = removal_size;
+      long max_size = removal_size;
       removal_spot = Rover;
       // Find the biggest free chunk
       do {
@@ -196,21 +200,19 @@ void *Mem_alloc(int nbytes) {
     // free list using morecore
     if (removal_spot == NULL)
     {
-      removal_size = nunits;
-      // FIXME DOES IT MATTER WHERE MEMORY IS ADDED???????????????????????????????
-      // Increase nunits to be a multiple of PAGESIZE
-      if (removal_size % PAGESIZE != 0)
+      int new_page = nunits;
+      // Increase removal_size to be a multiple of PAGESIZE
+      if (new_page % PAGESIZE != 0)
       {
-        removal_size += PAGESIZE - (removal_size % PAGESIZE);
+        new_page += PAGESIZE - (new_page % PAGESIZE);
       }
-      removal_spot = Rover->next;
-      Rover->next = morecore(removal_size);
-      Rover = Rover->next;
-      removal_size--;
-      Rover->size = removal_size;
+      chunk_t *temp = Rover->next;
+      removal_spot = morecore(new_page);
+      removal_size = (new_page/SIZEOF_CHUNK_T) - 1;
+      removal_spot->size = removal_size;
       Rover->next = removal_spot;
-      removal_spot = Rover;
-      Rover = Rover->next;
+      removal_spot->next = temp;
+      temp = NULL;
     }
     // If morecore returned NULL, return NULL
     if (removal_spot == NULL)
@@ -230,7 +232,7 @@ void *Mem_alloc(int nbytes) {
       Rover = Rover->next;
       // Connect new header to the free list
       Rover-next = removal_spot->next;
-      Rover->size = removal_size - (nunits-1);
+      Rover->size = removal_size - nunits - 1;
       // Remove old header dangling pointer
       removal_spot->next = NULL;
     }
@@ -240,7 +242,7 @@ void *Mem_alloc(int nbytes) {
       removal_spot->next = NULL;
     }
     // Return pointer to free Memory
-    return removal_spot++;
+    return (removal_spot + 1);
 }
 
 /* prints stats about the current free list
@@ -255,19 +257,13 @@ void *Mem_alloc(int nbytes) {
 void Mem_stats(void)
 {
     /* TODO calculate the latest stats and put them in the stats struct */
-    int numItems;    /* number of chunks in the free list    */
-    int min;         /* size of the smallest chunk, in bytes */
-    int max;         /* size of the largest chunk, in bytes  */
-    int average;     /* average size of the chunks, in bytes */
-    int totalBytes;  /* total size of all chunks, in bytes   */
     // Set all values according to the first node
-    chunk_t *search_pointer = &Dummy;
+    chunk_t *search_pointer = Dummy.next;
     stats.numItems = 1;
     stats.min = search_pointer->size;
     stats.max = search_pointer->size;
-    stats.totalBytes = search_pointer->size;
-    search_pointer = search_pointer->next;
-    // Iterate through all nodes
+    stats.totalBytes = 0;
+    // Iterate through all nodes and find values in units of chunks
     while (search_pointer != &Dummy)
     {
       stats.numItems++;
@@ -279,9 +275,13 @@ void Mem_stats(void)
       {
         stats.max = search_pointer->size;
       }
-      stats.totalBytes += search_pointer->size;
+      stats.totalBytes += (search_pointer->size + 1);
       search_pointer = search_pointer->next;
     }
+    // Convert from chunks to bytes
+    stats.min *= SIZEOF_CHUNK_T;
+    stats.max *= SIZEOF_CHUNK_T;
+    stats.totalBytes *= SIZEOF_CHUNK_T;
     // Calculate average size
     stats.average = stats.totalBytes / stats.numItems;
 
