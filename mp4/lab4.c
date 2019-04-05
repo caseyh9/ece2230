@@ -1,20 +1,20 @@
 /* lab4.c
- * Prof. Calhoun          <<-- updates required
- * jonccal
+ * Casey Hird
+ * crhird
  * ECE 2230 Spring 2019
- * MP3
+ * MP4
  *
  * Purpose:
  * --------
  *
  * This file contains drivers to test the mem.c package for dynamic memory
  * allocation.
- * 
+ *
  * The following parameters can be set on the command line.  If not set,
- * default values are used.  
+ * default values are used.
  *
  * If different options are implemented for the memory package, this provides a
- * simple mechanism to change the options.  
+ * simple mechanism to change the options.
  *
  * -f best|first|worst  search policy to find memory block (first by default)
  * -c                   turn on coalescing (off by default)
@@ -24,7 +24,7 @@
  *
  * The Unit test drivers.  Two example drivers are provided.  You MUST
  *           add one or more additional unit drivers for more detailed testing
- * 
+ *
  * -u 0      Tests one allocation for 16 bytes
  * -u 1      Tests 4 allocations including a new page
  *           The student must update this driver to match the details of
@@ -49,12 +49,12 @@ int main(int argc, char **argv)
 {
     int unit_driver;  /* the unit test number to run */
     int seed;         /* random number seed */
-    
+
     getCommandLine(argc, argv, &unit_driver, &seed);
     printf("Seed: %d\n", seed);
     srand48(seed);
 
-    // The major choices: search policy and coalescing option 
+    // The major choices: search policy and coalescing option
     if (SearchPolicy == BEST_FIT) printf("Best-fit search policy");
     else if (SearchPolicy == FIRST_FIT) printf("First-fit search policy");
     else if (SearchPolicy == WORST_FIT) printf("Worst-fit search policy");
@@ -83,7 +83,7 @@ int main(int argc, char **argv)
         char *string;
         const char msg[] = "hello world 15c";
         int len = strlen(msg);
-        // add one for null character at end of string 
+        // add one for null character at end of string
         string = (char *) Mem_alloc((len+1) * sizeof(char));
         strcpy(string, msg);
         printf("string length=%d\n:%s:\n", len, string);
@@ -108,14 +108,14 @@ int main(int argc, char **argv)
          This test makes four allocations from the free list with the goal
          of making the third allocation the correct size so that the free
          list is left empty. The fourth allocation should alocation a new
-         page To get this test to work with your code you need to 
+         page To get this test to work with your code you need to
          determine two values.
          */
         int unit_size = SIZEOF_CHUNK_T;
         int units_in_first_page = PAGESIZE/unit_size;
         assert(units_in_first_page * unit_size == PAGESIZE);
-        printf("There are %d units per page, and the size of chunk_t is %d bytes\n", 
-                units_in_first_page, unit_size); 
+        printf("There are %d units per page, and the size of chunk_t is %d bytes\n",
+                units_in_first_page, unit_size);
 
         int *p1, *p2, *p3, *p4;
         int num_bytes_1, num_bytes_2, num_bytes_3;
@@ -124,23 +124,23 @@ int main(int argc, char **argv)
         // allocate 1st pointer to 1/8 of a page
         num_bytes_1 = (units_in_first_page/8 - 1)*unit_size;
         p1 = (int *) Mem_alloc(num_bytes_1);
-        printf("first: %d bytes (%d units) p=%p \n", 
+        printf("first: %d bytes (%d units) p=%p \n",
                 num_bytes_1, num_bytes_1/unit_size, p1);
         Mem_print();
-         
+
         // allocate for 2nd pointer to 1/2 of a page
         num_bytes_2 = (units_in_first_page/2 - 1)*unit_size;
         p2 = (int *) Mem_alloc(num_bytes_2);
-        printf("second: %d bytes (%d units) p=%p \n", 
+        printf("second: %d bytes (%d units) p=%p \n",
                 num_bytes_2, num_bytes_2/unit_size, p2);
         Mem_print();
 
         // allocate remaining memory in free list
-        num_bytes_3 = units_in_first_page - num_bytes_1/unit_size 
+        num_bytes_3 = units_in_first_page - num_bytes_1/unit_size
             - num_bytes_2/unit_size - 3;
         num_bytes_3 *= unit_size;
         p3 = (int *) Mem_alloc(num_bytes_3);
-        printf("third: %d bytes (%d units) p=%p \n", 
+        printf("third: %d bytes (%d units) p=%p \n",
                 num_bytes_3, num_bytes_3/unit_size, p3);
         Mem_print();
         printf("unit driver 1: above Mem_print shows empty free list\n");
@@ -148,7 +148,7 @@ int main(int argc, char **argv)
         // allocate for 4th pointer to 1/4 a page when free list is empty
         num_bytes_4 = (units_in_first_page/4 - 1)*unit_size;
         p4 = (int *) Mem_alloc(num_bytes_4);
-        printf("fourth: %d bytes (%d units) p=%p \n", 
+        printf("fourth: %d bytes (%d units) p=%p \n",
                 num_bytes_4, num_bytes_4/unit_size, p4);
         Mem_print();
 
@@ -175,7 +175,7 @@ int main(int argc, char **argv)
 
 
     // add your unit test drivers here to test for special cases such as
-    //   -- request the number of bytes that matches a whole page, and a 
+    //   -- request the number of bytes that matches a whole page, and a
     //      size that is one unit smaller than a page
     //   -- request more bytes than in one page
     //   -- combinations of requests and frees such that the free list is empty
@@ -186,8 +186,8 @@ int main(int argc, char **argv)
     exit(0);
 }
 
-/* read in command line arguments.  Note that Coalescing and SearchPolicy 
- * are stored in global variables for easy access by other 
+/* read in command line arguments.  Note that Coalescing and SearchPolicy
+ * are stored in global variables for easy access by other
  * functions.
  *
  * -u 0  is for the unit drivers, starting with driver 0
@@ -196,11 +196,11 @@ void getCommandLine(int argc, char **argv, int *unit_driver, int *seed)
 {
     /* The geopt function creates three global variables:
      *    optopt--if an unknown option character is found
-     *    optind--index of next element in argv 
-     *    optarg--argument for option that requires argument 
+     *    optind--index of next element in argv
+     *    optarg--argument for option that requires argument
      *
      * The third argument to getopt() specifies the possible argument flags
-     *   If an argument flag is followed by a colon, then an argument is 
+     *   If an argument flag is followed by a colon, then an argument is
      *   expected. E.g., "x:y" means -x must have an argument but not -y
      */
     int c;

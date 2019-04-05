@@ -88,7 +88,7 @@ chunk_t *morecore(int new_bytes)
 
     /* update statistics */
     stats.numSbrkCalls++;
-    stats.numPages = new_bytes/PAGESIZE;
+    stats.numPages += new_bytes/PAGESIZE;
 
     return new_p;
 }
@@ -212,6 +212,7 @@ void *Mem_alloc(int nbytes) {
       removal_spot->size = removal_size;
       Rover->next = removal_spot;
       removal_spot->next = temp;
+      removal_spot->size = removal_size;
       temp = NULL;
     }
     // If morecore returned NULL, return NULL
@@ -232,7 +233,7 @@ void *Mem_alloc(int nbytes) {
       Rover = Rover->next;
       // Connect new header to the free list
       Rover-next = removal_spot->next;
-      Rover->size = removal_size - nunits - 1;
+      Rover->size = removal_size - nunits;
       // Remove old header dangling pointer
       removal_spot->next = NULL;
     }
