@@ -96,8 +96,14 @@ chunk_t *morecore(int new_bytes)
 /* TODO update this documentation according to the programming guide */
 void Mem_free(void *return_ptr)
 {
-    /* TODO obviously the next line is WRONG!!!!  You must fix it. */
-    free(return_ptr);
+  // Set return_ptr to point to the header
+  chunk_t *return_pos = (chunk_t*) return_ptr;
+  return_pos--;
+  chunk_t *temp = Rover->next;
+  Rover->next = return_pos;
+  return_pos->next = temp;
+  Rover = temp;
+  temp = NULL;
 }
 
 /* TODO update this documentation */
@@ -206,6 +212,11 @@ void *Mem_alloc(int nbytes) {
       removal_spot = Rover;
       Rover = Rover->next;
     }
+    // If morecore returned NULL, return NULL
+    if (removal_spot == NULL)
+    {
+      return NULL;
+    }
     // User Rover to find chunk before removal_spot
     while (Rover->next != removal_spot)
     {
@@ -244,6 +255,35 @@ void *Mem_alloc(int nbytes) {
 void Mem_stats(void)
 {
     /* TODO calculate the latest stats and put them in the stats struct */
+    int numItems;    /* number of chunks in the free list    */
+    int min;         /* size of the smallest chunk, in bytes */
+    int max;         /* size of the largest chunk, in bytes  */
+    int average;     /* average size of the chunks, in bytes */
+    int totalBytes;  /* total size of all chunks, in bytes   */
+    // Set all values according to the first node
+    chunk_t *search_pointer = &Dummy;
+    stats.numItems = 1;
+    stats.min = search_pointer->size;
+    stats.max = search_pointer->size;
+    stats.totalBytes = search_pointer->size;
+    search_pointer = search_pointer->next;
+    // Iterate through all nodes
+    while (search_pointer != &Dummy)
+    {
+      stats.numItems++;
+      if (search_pointer->size < stats.min)
+      {
+        stats.min = search_pointer->size;
+      }
+      else if (search_pointer->size > stats.max)
+      {
+        stats.max = search_pointer->size;
+      }
+      stats.totalBytes += search_pointer->size;
+      search_pointer = search_pointer->next;
+    }
+    // Calculate average size
+    stats.average = stats.totalBytes / stats.numItems;
 
     /* ======= DO NOT MODIFY FROM HERE TO END OF Mem_stats() ======= */
     printf("\n\t\tMP4 Heap Memory Statistics\n"
