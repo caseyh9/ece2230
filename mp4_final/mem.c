@@ -6,9 +6,12 @@
  *
  * Propose: A template for MP4
  *
- * Assumptions:
+ * Assumptions: Memory is stored contigously by the operating system.
+ * We also assume that the client of the Mem_alloc function makes appropriate
+ * arrangements for when suitable memory cannot be found and NULL
+ * is returned.
  *
- * Bugs:
+ * Bugs: no known bugs
  *
  */
 
@@ -93,7 +96,17 @@ chunk_t *morecore(int new_bytes)
     return new_p;
 }
 
-/* TODO update this documentation according to the programming guide */
+/*
+	Frees memory that has been allocated at return_ptr.
+	
+	return_ptr is a pointer to the memory block that will be put into
+	the free list.
+	
+	If return_ptr is NULL, return NULL.
+
+	If Coalescing == TRUE,
+	the freed memory is colesced into any adjacent free memory.
+*/
 void Mem_free(void *return_ptr)
 {
   if (return_ptr == NULL)
@@ -144,7 +157,18 @@ void Mem_free(void *return_ptr)
   }
 }
 
-/* TODO update this documentation */
+/*
+	Removes a block of memory from the free list.
+
+	nbytes - the size in bytes of the memory block that will be removed.
+
+	If a large enough block of memory is not present in the free list, then
+	the necessary number of bytes (as a multiple of the page size) will be
+	requested from morecore().
+
+	If a large enough block of memroy cannot be found and morecore()
+	cannot allocate any more pages of memory, return NULL.
+*/
 void *Mem_alloc(int nbytes) {
     /* assert preconditions */
     assert(nbytes > 0);

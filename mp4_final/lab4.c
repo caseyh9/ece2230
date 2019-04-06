@@ -29,8 +29,17 @@
  * -u 1      Tests 4 allocations including a new page
  *           The student must update this driver to match the details of
  *           his or her design.
- *
- * -u ?      The student is REQUIRED to add additional drivers
+ * -u 2		 Tests request for a whole page and one unit smaller and larger
+ *			 than a page.
+ * -u 3		 Tests requests for large chunks of memory that require several
+ *			 pages to fulfill.
+ * -u 4 	 Tests the ability of the free list to allocate and free
+ *			 memory at different times, mixing in calls to allocate and free
+ *			 to create a disorganized free list.
+ * -u 5		 Tests the shape of the free list when contigous blocks of memory
+ * 			 are allocated and then some block in the middle is freed.
+ * -u 6		 Tests the shape of the free list when coalescing is used to
+ *			 demonstrate that coalescing works in the correct situations.
  */
 
 #include <stdlib.h>
