@@ -29,7 +29,9 @@ void pretty_print(bst_t *T);
 void bst_destruct_nodes(bst_node_t *root);
 bst_node_t* insert_node(bst_node_t *node, bst_key_t key, data_t elem_ptr, int policy);
 bst_node_t* rotate_right(bst_node_t* node);
-bst_node_t* rotate_right(bst_node_t* node);
+bst_node_t* rotate_left(bst_node_t* node);
+int calc_int_path(bst_node_t *node, int level);
+int max(int a, int b);
 
 
 /* Finds the tree element with the matching key and returns the data that is
@@ -44,7 +46,7 @@ data_t bst_access(bst_t *T, bst_key_t key)
 {
 	// Initialize loop variables
     CompCalls = 0;
-	bst_node_t *node = bst_t->root;
+	bst_node_t *node = T->root;
 
 	// Loop until reaching a NULL node (child of leaf)
 	while (node != NULL)
@@ -163,7 +165,7 @@ int bst_insert(bst_t *T, bst_key_t key, data_t elem_ptr)
 	while (node != NULL)
 	{
 		CompCalls++;
-		if (node->key = key)
+		if (key == node->key)
 		{
 			// replace with data given
 			node->data_ptr = elem_ptr;
@@ -171,7 +173,7 @@ int bst_insert(bst_t *T, bst_key_t key, data_t elem_ptr)
 		}
 		// Move to appropriate child
 		CompCalls++;
-		if (node->key < key)
+		if (key < node->key)
 		{
 			node = node->left;
 		}
@@ -193,7 +195,7 @@ int bst_insert(bst_t *T, bst_key_t key, data_t elem_ptr)
 		else
 		{
 			insertion = 1;
-			T->root = insert_node(T->root, key, elem_ptr, T->policy); // FIXME set to root?????
+			T->root = insert_node(T->root, key, elem_ptr, T->policy);
 		}
 		// Update tree size
 		(T->size)++;
@@ -224,7 +226,6 @@ int bst_insert(bst_t *T, bst_key_t key, data_t elem_ptr)
  */
 int bst_avl_insert(bst_t *T, bst_key_t key, data_t elem_ptr)
 {
-	// Attmempt 2 ********* FIXME FIXME 
 	T->root = insert_node(T->root, key, elem_ptr, T->policy);
     return 1;
 }
@@ -246,7 +247,6 @@ int bst_avl_insert(bst_t *T, bst_key_t key, data_t elem_ptr)
  */
 bst_node_t* insert_node(bst_node_t *node, bst_key_t key, data_t elem_ptr, int policy)
 {
-	// Attempt 2********************FIXME FIXME
 	// If NULL construct a new node
 	if (node == NULL)
 	{
@@ -262,16 +262,16 @@ bst_node_t* insert_node(bst_node_t *node, bst_key_t key, data_t elem_ptr, int po
 	// Otherwise, search down the tree
 	if (key < node->key)
 	{
-		node->left = insert(node->left, key, elem_ptr);
+		node->left = insert_node(node->left, key, elem_ptr, policy);
 	}
 	else
 	{
-		node->right = insert(node->right, key, elem_ptr);
+		node->right = insert_node(node->right, key, elem_ptr, policy);
 	}
 
 	// Update height of current node
 	int left_height, right_height;
-	if (node->left = NULL)
+	if (node->left == NULL)
 		left_height = 0;
 	else
 		left_height = node->left->height;
@@ -311,6 +311,20 @@ bst_node_t* insert_node(bst_node_t *node, bst_key_t key, data_t elem_ptr, int po
 	return node;
 }
 
+/* Finds the max of two integers a and b
+ *
+ * a,b - the integers to find the max of
+ *
+ * Returns: the larger value between a and b
+ */
+int max(int a, int b)
+{
+	if (a > b)
+		return a;
+	else
+		return b;
+}
+
 /* AVL right rotation function. Takes node, its right child, and that child's
  * right child, and rotates so that the right child is the root and node is its
  * left child.
@@ -319,9 +333,37 @@ bst_node_t* insert_node(bst_node_t *node, bst_key_t key, data_t elem_ptr, int po
  *
  * Returns: a pointer to the root node after the rotation.
  */
-bst_node_t* rotate_right(bst_node_t* node)
+bst_node_t* rotate_right(bst_node_t* A)
 {
+	// Rotate nodes (B is left child of A, becomes new root)
+	bst_node_t *B = A->left;
+	bst_node_t *temp = B->right;
+	B->right = A;
+	A->left = temp;
 
+	// Update height of A
+	int left_height, right_height;
+	if (A->left == NULL)
+		left_height = 0;
+	else
+		left_height = A->left->height;
+	if (A->right == NULL)
+		right_height = 0;
+	else
+		right_height = A->right->height;	
+	A->height = 1 + max(left_height, right_height);
+	// Update height of B
+	if (B->left == NULL)
+		left_height = 0;
+	else
+		left_height = B->left->height;
+	if (B->right == NULL)
+		right_height = 0;
+	else
+		right_height = B->right->height;	
+	B->height = 1 + max(left_height, right_height);
+
+	return B;
 }
 
 /* AVL left rotation function. Takes node, its left child, and that child's
@@ -332,9 +374,37 @@ bst_node_t* rotate_right(bst_node_t* node)
  *
  * Returns: a pointer to the root node after the rotation.
  */
-bst_node_t* rotate_right(bst_node_t* node)
+bst_node_t* rotate_left(bst_node_t* A)
 {
+	// Rotate nodes (B is right child of A, becomes new root)
+	bst_node_t *B = A->right;
+	bst_node_t *temp = B->left;
+	B->left = A;
+	A->right = temp;
 
+	// Update height of A
+	int left_height, right_height;
+	if (A->left == NULL)
+		left_height = 0;
+	else
+		left_height = A->left->height;
+	if (A->right == NULL)
+		right_height = 0;
+	else
+		right_height = A->right->height;	
+	A->height = 1 + max(left_height, right_height);
+	// Update height of B
+	if (B->left == NULL)
+		left_height = 0;
+	else
+		left_height = B->left->height;
+	if (B->right == NULL)
+		right_height = 0;
+	else
+		right_height = B->right->height;	
+	B->height = 1 + max(left_height, right_height);
+
+	return B;
 }
 
 /* DO NOT NEED TO IMPLEMENT FOR REGULAR ASSIGNMENT. ONLY FOR EXTRA ASSIGNMENT.
@@ -372,25 +442,42 @@ data_t bst_remove(bst_t *T, bst_key_t key)
 /* RETURNS the number of keys in the tree */
 int bst_size(bst_t *T)
 {
-    return -1; /*TODO */
+	return T->size;
 }
 
 /* RETURNS the number of key comparisons  */
 int bst_key_comps(bst_t *T)
 {
-    return -1; /*TODO */
+	return T->num_recent_key_comparisons;
 }
 
 /* RETURNS the computed internal path length of the tree T */
 int bst_int_path_len(bst_t *T)
 {
-    return -1; /*TODO */
+	return calc_int_path(T->root, 0);
+}
+
+/* Recursively calculates the internal path length from root node.
+ *
+ * node - the node at which we are calculating the path length
+ * level - the level of node in the tree
+ *
+ * Returns: the length of all paths from the current node
+ */
+int calc_int_path(bst_node_t *node, int level)
+{
+	if (node == NULL)
+	{
+		return 0;
+	}
+	return level +  calc_int_path(node->right,level+1)
+		+ calc_int_path(node->left,level+1);
 }
 
 /* RETURNS the number of rotations from the last remove*/
 int bst_rotations(bst_t *T)
 {
-    return -1; /*TODO */
+	return T->num_recent_rotations;
 }
 
 
