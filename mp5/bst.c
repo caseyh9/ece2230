@@ -1,6 +1,6 @@
 /* bst.c 
- * TODO NAME
- * TODO email
+ * Casey Hird
+ * crhird@g.clemson.edu
  * ECE 2230 Spring 2019
  * MP 5
  *
@@ -25,7 +25,11 @@ int bst_debug_validate_rec(bst_node_t *N, int min, int max, int *count);
 int rec_height(bst_node_t *N);
 int children(bst_node_t *N);
 void pretty_print(bst_t *T);
-
+// Added helper functions
+void bst_destruct_nodes(bst_node_t *root);
+bst_node_t* insert_node(bst_node_t *node, bst_key_t key, data_t elem_ptr, int policy);
+bst_node_t* rotate_right(bst_node_t* node);
+bst_node_t* rotate_right(bst_node_t* node);
 
 
 /* Finds the tree element with the matching key and returns the data that is
@@ -38,8 +42,36 @@ void pretty_print(bst_t *T);
  */
 data_t bst_access(bst_t *T, bst_key_t key)
 {
+	// Initialize loop variables
     CompCalls = 0;
-    /* TODO complete */
+	bst_node_t *node = bst_t->root;
+
+	// Loop until reaching a NULL node (child of leaf)
+	while (node != NULL)
+	{
+		// Check if the key is found at the current node
+		CompCalls++;
+		if (key == node->key)
+		{
+			// If found, return the data pointer in this node
+			return node->data_ptr; // FIXME data pointer?
+		}
+		// If we need to keep searching, compare keys
+		CompCalls++;
+		if (key < node->key)
+		{
+			// key is less than current node, go left
+			node = node->left;
+		}
+		else
+		{
+			// key is greater than current node, go right
+			node = node->right;
+		}
+	}
+	// Update tree stats
+	T->num_recent_key_comparisons = CompCalls;
+	// If matching key was not found, return NULL
     return NULL;
 }
 
@@ -52,8 +84,21 @@ data_t bst_access(bst_t *T, bst_key_t key)
  */
 bst_t *bst_construct(int tree_policy)
 {
-    /* TODO complete */
-    return NULL;
+	// Check that tree_policy is an acceptable value
+	assert(tree_policy == AVL || tree_policy == BST);
+
+	// Allocate memory for tree header
+	bst_t *tree = (bst_t*) malloc(sizeof(bst_t));
+	// Set root to NULL
+	tree->root = NULL;
+	// Set policy
+	tree->policy = tree_policy;
+	// Set all other info to 0
+	tree->size = 0;
+	tree->num_recent_rotations = 0;
+	tree->num_recent_key_comparisons = 0;
+	// Return pointer to new tree
+	return tree;
 }
 
 
@@ -65,7 +110,35 @@ bst_t *bst_construct(int tree_policy)
 
 void bst_destruct(bst_t *T)
 {
-    /* TODO complete */
+	// Recursively destroy all nodes with helper function
+	bst_destruct_nodes(T->root);
+	// Free bst header
+	free(T);
+}
+
+/* Destroy the tree that has the node passed in at its root. So, we are
+ * destroying the given node and every child that can be reached from it.
+ *
+ * root - the root of the tree being destroyed
+ */
+void bst_destruct_nodes(bst_node_t *root)
+{
+	// If root is NULL, do nothing
+	if (root == NULL)
+	{
+		return;
+	}
+	// Recusively destroy an children
+	bst_destruct_nodes(root->left);
+	bst_destruct_nodes(root->right);
+	// Destroy the data in the node
+	free(root->data_ptr);
+	root->data_ptr = NULL;
+	// Remove dangling pointers from children
+	root->left = NULL;
+	root->right = NULL;
+	// Free root memory
+	free(root);
 }
 
 /* Insert data_t into the tree with the associated key. Insertion MUST
@@ -83,17 +156,58 @@ int bst_insert(bst_t *T, bst_key_t key, data_t elem_ptr)
 {
     CompCalls = 0;
     NumRotations = 0;
-    if (T->policy == AVL) {
-	    return -1;
-    }
-    /* TODO: add code to insert key into tree for BST and AVL */
-    /*TODO: add code to update the tree stats */
+	int insertion = -1;
+	
+	// Check if key is already in tree
+	bst_node_t *node = T->root;
+	while (node != NULL)
+	{
+		CompCalls++;
+		if (node->key = key)
+		{
+			// replace with data given
+			node->data_ptr = elem_ptr;
+			return 0;
+		}
+		// Move to appropriate child
+		CompCalls++;
+		if (node->key < key)
+		{
+			node = node->left;
+		}
+		else
+		{
+			node = node->right;
+		}
+	}
+
+	// If key not found, insert new node
+	if (insertion == -1)
+	{
+		// For avl property, go to avl insertion
+		if (T->policy == AVL)
+		{
+			insertion = bst_avl_insert(T,key,elem_ptr);
+		}
+		// Otherwise, use normal insertion
+		else
+		{
+			insertion = 1;
+			T->root = insert_node(T->root, key, elem_ptr, T->policy); // FIXME set to root?????
+		}
+		// Update tree size
+		(T->size)++;
+	}
+
+	// Update tree stats
+	T->num_recent_rotations = NumRotations;
+	T->num_recent_key_comparisons = CompCalls;
+
 #ifdef VALIDATE
         bst_debug_validate(T);
 #endif
-    return -1;
+    return insertion;
 }
-
 
 /* Insert data_t into the tree with the associated key. Insertion MUST
  * follow the tree's property AVL. This function should be called from
@@ -103,17 +217,124 @@ int bst_insert(bst_t *T, bst_key_t key, data_t elem_ptr)
  * key - search key to determine if key is in the tree
  * elem_ptr - data to be stored at tree node indicated by key
  *
+ * Precondition: there is not already a node in tree T with the given key
+ *
  * RETURNS 0 if key is found and element is replaced, and 1 if key is not found
  * and element is inserted
  */
 int bst_avl_insert(bst_t *T, bst_key_t key, data_t elem_ptr)
 {
-    int replace = 0;
-    
-    /* TODO: insert into AVL tree. Rember to check balance and rebalance if
-     * necessary */
+	// Attmempt 2 ********* FIXME FIXME 
+	T->root = insert_node(T->root, key, elem_ptr, T->policy);
+    return 1;
+}
 
-    return replace;
+/* Insert data_t into the tree with the associated key.
+ * 
+ * This function supports the bst_insert function, adding a new node to the tree
+ * when one with the desired key is not already present.
+ *
+ * node - the current node position in the tree, if NULL this is where the
+ *	new node will be added
+ * key - key to be added to the tree
+ * elem_ptr - data to be stored at tree node indicated by key
+ * policy - the avl policy of the tree being inserted into
+ *
+ * Precondition: there is not already a node in the tree with the given key
+ *
+ * RETURNS node, if node is NULL, then returns a pointer to a newly added node
+ */
+bst_node_t* insert_node(bst_node_t *node, bst_key_t key, data_t elem_ptr, int policy)
+{
+	// Attempt 2********************FIXME FIXME
+	// If NULL construct a new node
+	if (node == NULL)
+	{
+		bst_node_t *new_node = (bst_node_t*) malloc(sizeof(bst_node_t));
+		new_node->data_ptr = elem_ptr;
+		new_node->key = key;
+		new_node->height = 0;
+		new_node->left = NULL;
+		new_node->right = NULL;
+		return new_node;
+	}
+
+	// Otherwise, search down the tree
+	if (key < node->key)
+	{
+		node->left = insert(node->left, key, elem_ptr);
+	}
+	else
+	{
+		node->right = insert(node->right, key, elem_ptr);
+	}
+
+	// Update height of current node
+	int left_height, right_height;
+	if (node->left = NULL)
+		left_height = 0;
+	else
+		left_height = node->left->height;
+	if (node->right == NULL)
+		right_height = 0;
+	else
+		right_height = node->right->height;
+		
+	node->height = 1 + max(left_height, right_height);
+
+	// Check AVL property if tree has AVL policy
+	if (policy == AVL)
+	{
+		// Check for 4 rotation cases
+		int balance = left_height - right_height;
+		// Left-Left
+		if (balance > 1 && key < node->left->key)
+			return rotate_right(node);
+		// Right-Right
+		if (balance < -1 && key > node->right->key)
+			return rotate_left(node);
+		// Left-Right
+		if (balance > 1 && key > node->left->key)
+		{
+			node->left = rotate_left(node->left);
+			return rotate_right(node);
+		}
+		// Right-Left
+		if (balance < -1 && key < node->left->key)
+		{
+			node->right = rotate_right(node->right);
+			return rotate_left(node);
+		}
+	}
+
+	// Return current node
+	return node;
+}
+
+/* AVL right rotation function. Takes node, its right child, and that child's
+ * right child, and rotates so that the right child is the root and node is its
+ * left child.
+ *
+ * node - the node that violates the AVL property
+ *
+ * Returns: a pointer to the root node after the rotation.
+ */
+bst_node_t* rotate_right(bst_node_t* node)
+{
+
+}
+
+/* AVL left rotation function. Takes node, its left child, and that child's
+ * left child, and rotates so that the left child is the root and node is its
+ * right child.
+ *
+ * node - the node that violates the AVL property
+ *
+ * Returns: a pointer to the root node after the rotation.
+ */
+bst_node_t* rotate_right(bst_node_t* node)
+{
+
 }
 
 /* DO NOT NEED TO IMPLEMENT FOR REGULAR ASSIGNMENT. ONLY FOR EXTRA ASSIGNMENT.

@@ -1,6 +1,6 @@
 /* bst.h 
- * TODO NAME
- * TODO email
+ * Casey Hird
+ * crhird@g.clemson.edu
  * ECE 2230 Spring 2019
  * MP 5
  *
