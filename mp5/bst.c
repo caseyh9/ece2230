@@ -422,6 +422,7 @@ bst_node_t* rotate_left(bst_node_t* A)
 
 data_t bst_remove(bst_t *T, bst_key_t key)
 {
+return NULL;
     data_t dp = NULL;
     CompCalls = 0;
     NumRotations = 0;
