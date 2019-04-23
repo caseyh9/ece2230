@@ -32,6 +32,8 @@ bst_node_t* rotate_right(bst_node_t* node);
 bst_node_t* rotate_left(bst_node_t* node);
 int calc_int_path(bst_node_t *node, int level);
 int max(int a, int b);
+bst_node_t* remove_node(bst_node_t* node, bst_key_t key, int policy);
+bst_node_t* least_node(bst_node_t *node);
 
 
 /* Finds the tree element with the matching key and returns the data that is
@@ -56,7 +58,7 @@ data_t bst_access(bst_t *T, bst_key_t key)
 		if (key == node->key)
 		{
 			// If found, return the data pointer in this node
-			return node->data_ptr; // FIXME data pointer?
+			return node->data_ptr;
 		}
 		// If we need to keep searching, compare keys
 		CompCalls++;
@@ -162,24 +164,27 @@ int bst_insert(bst_t *T, bst_key_t key, data_t elem_ptr)
 	
 	// Check if key is already in tree
 	bst_node_t *node = T->root;
-	while (node != NULL)
+	while (node != NULL && insertion == -1)
 	{
 		CompCalls++;
 		if (key == node->key)
 		{
 			// replace with data given
 			node->data_ptr = elem_ptr;
-			return 0;
+			insertion = 0;
 		}
 		// Move to appropriate child
-		CompCalls++;
-		if (key < node->key)
-		{
-			node = node->left;
-		}
 		else
 		{
-			node = node->right;
+			CompCalls++;
+			if (key < node->key)
+			{
+				node = node->left;
+			}
+			else
+			{
+				node = node->right;
+			}
 		}
 	}
 
@@ -205,9 +210,9 @@ int bst_insert(bst_t *T, bst_key_t key, data_t elem_ptr)
 	T->num_recent_rotations = NumRotations;
 	T->num_recent_key_comparisons = CompCalls;
 
-#ifdef VALIDATE
-        bst_debug_validate(T);
-#endif
+//#ifdef VALIDATE
+//        bst_debug_validate(T);
+//#endif
     return insertion;
 }
 
@@ -272,11 +277,11 @@ bst_node_t* insert_node(bst_node_t *node, bst_key_t key, data_t elem_ptr, int po
 	// Update height of current node
 	int left_height, right_height;
 	if (node->left == NULL)
-		left_height = 0;
+		left_height = -1;
 	else
 		left_height = node->left->height;
 	if (node->right == NULL)
-		right_height = 0;
+		right_height = -1;
 	else
 		right_height = node->right->height;
 		
@@ -335,6 +340,7 @@ int max(int a, int b)
  */
 bst_node_t* rotate_right(bst_node_t* A)
 {
+	NumRotations++;
 	// Rotate nodes (B is left child of A, becomes new root)
 	bst_node_t *B = A->left;
 	bst_node_t *temp = B->right;
@@ -344,21 +350,21 @@ bst_node_t* rotate_right(bst_node_t* A)
 	// Update height of A
 	int left_height, right_height;
 	if (A->left == NULL)
-		left_height = 0;
+		left_height = -1;
 	else
 		left_height = A->left->height;
 	if (A->right == NULL)
-		right_height = 0;
+		right_height = -1;
 	else
 		right_height = A->right->height;	
 	A->height = 1 + max(left_height, right_height);
 	// Update height of B
 	if (B->left == NULL)
-		left_height = 0;
+		left_height = -1;
 	else
 		left_height = B->left->height;
 	if (B->right == NULL)
-		right_height = 0;
+		right_height = -1;
 	else
 		right_height = B->right->height;	
 	B->height = 1 + max(left_height, right_height);
@@ -376,6 +382,7 @@ bst_node_t* rotate_right(bst_node_t* A)
  */
 bst_node_t* rotate_left(bst_node_t* A)
 {
+	NumRotations++;
 	// Rotate nodes (B is right child of A, becomes new root)
 	bst_node_t *B = A->right;
 	bst_node_t *temp = B->left;
@@ -385,21 +392,21 @@ bst_node_t* rotate_left(bst_node_t* A)
 	// Update height of A
 	int left_height, right_height;
 	if (A->left == NULL)
-		left_height = 0;
+		left_height = -1;
 	else
 		left_height = A->left->height;
 	if (A->right == NULL)
-		right_height = 0;
+		right_height = -1;
 	else
 		right_height = A->right->height;	
 	A->height = 1 + max(left_height, right_height);
 	// Update height of B
 	if (B->left == NULL)
-		left_height = 0;
+		left_height = -1;
 	else
 		left_height = B->left->height;
 	if (B->right == NULL)
-		right_height = 0;
+		right_height = -1;
 	else
 		right_height = B->right->height;	
 	B->height = 1 + max(left_height, right_height);
@@ -422,23 +429,188 @@ bst_node_t* rotate_left(bst_node_t* A)
 
 data_t bst_remove(bst_t *T, bst_key_t key)
 {
-return NULL;
     data_t dp = NULL;
     CompCalls = 0;
     NumRotations = 0;
-    if (T->policy == AVL)
-	    dp = NULL; /*TODO: AVL remove */
-    else
-	    dp = NULL; /*TODO: BST remove */
 
-    /*TODO: update tree stats*/
+	// Find data at node with given key
+	bst_node_t *node = T->root;
+	bst_node_t *parent = NULL;
+	while (node != NULL && dp == NULL)
+	{
+		CompCalls++;
+		if (key == node->key)
+		{
+			// Copy data at node with given key
+			dp = node->data_ptr;
+		}
+		// Move to appropriate child
+		else
+		{
+			parent = node;
+			CompCalls++;
+			if (key < node->key)
+			{
+				node = node->left;
+			}
+			else
+			{
+				node = node->right;
+			}
+		}
+	}
 
-#ifdef VALIDATE
-        bst_debug_validate(T);
-#endif
+	// If matching node was found, remove it from the tree
+	if (dp != NULL)
+	{
+		if (parent == NULL)
+		{
+			T->root = remove_node(node, key, T->policy);
+		}
+		else if (key < parent->key)
+		{
+			parent->left = remove_node(parent->left, key, T->policy);
+		}
+		else if (key > parent->key)
+		{
+			parent->right = remove_node(parent->right, key, T->policy);
+		}
+		// If something is removed, decrement size of tree
+		(T->size)--;
+	}
+
+    // update tree stats
+	T->num_recent_rotations = NumRotations;
+	T->num_recent_key_comparisons = CompCalls;
+
+//#ifdef VALIDATE
+//        bst_debug_validate(T);
+//#endif
     return dp;
 }
 
+/* Recursively removes the node with the given key from the tree with node
+ * as its root.
+ *
+ * node - the node currently being traversed
+ * key - the key of the node to be removed
+ * policy - bst policy, if equal to AVL, we need to maintain the avl property
+ * after deletion
+ *
+ * Returns: the node being pointed to, or the node that replaces it if node
+ * is removed.
+ */
+bst_node_t* remove_node(bst_node_t* node, bst_key_t key, int policy)
+{
+	bst_node_t *temp;
+	// If key is not in the tree and we have gone past the leaves
+	if (node == NULL)
+		return NULL;
+	// Check if node should be in left or right child
+	if (key < node->key)
+		node->left = remove_node(node->left, key, policy);
+	else if (key > node->key)
+		node->right = remove_node(node->right, key, policy);
+	else
+	{
+		// Key matches current node
+		// If node has no children, temp is NULL, and if node has
+		// one child, temp is the other child
+		if (node->left == NULL && node->right == NULL)
+		{
+			temp = NULL;
+			free(node);
+			return temp;
+		}
+		else if (node->left == NULL)
+		{
+			temp = node->right;
+			// Free node
+			node->left = NULL;
+			node->right = NULL;
+			free(node);
+			return temp;
+		}
+		else if (node->right == NULL)
+		{
+			temp = node->left;
+			// Free node
+			node->left = NULL;
+			node->right = NULL;
+			free(node);
+			return temp;
+		}
+		else
+		{
+			// If node has 2 children, need to find its successor to
+			// replace its position
+			temp = least_node(node->right);
+			node->key = temp->key;
+			node->data_ptr = temp->data_ptr;
+			// Then remove the successor from its original position
+			node->right = remove_node(node->right, temp->key, policy);
+		}
+	}
+
+	// Update height of current node
+	int left_height, right_height;
+	if (node->left == NULL)
+		left_height = -1;
+	else
+		left_height = node->left->height;
+	if (node->right == NULL)
+		right_height = -1;
+	else
+		right_height = node->right->height;
+		
+	node->height = 1 + max(left_height, right_height);
+
+	// Check AVL property if tree has AVL policy
+	if (policy == AVL)
+	{
+		// Check for 4 rotation cases
+		int balance = left_height - right_height;
+		// Left-Left
+		if (balance > 1 && key < node->left->key)
+			return rotate_right(node);
+		// Right-Right
+		if (balance < -1 && key > node->right->key)
+			return rotate_left(node);
+		// Left-Right
+		if (balance > 1 && key > node->left->key)
+		{
+			node->left = rotate_left(node->left);
+			return rotate_right(node);
+		}
+		// Right-Left
+		if (balance < -1 && key < node->left->key)
+		{
+			node->right = rotate_right(node->right);
+			return rotate_left(node);
+		}
+	}
+
+	// Return original or replaced node
+	return node;
+}
+
+/* Finds the descendant of node with the lowest key. This is used as
+ * a helper function for removing a node, finding the successor to
+ * a node that is being removed.
+ *
+ * node - the root of the search for the least node (the right
+ * child of the node we want to find the successor of)
+ *
+ * Returns - the node in the subtree with root node that has the
+ * lowest key.
+ */
+bst_node_t* least_node(bst_node_t *node)
+{
+	bst_node_t *least = node;
+	while (least->left != NULL)
+		least = least->left;
+	return least;
+}
 
 /* RETURNS the number of keys in the tree */
 int bst_size(bst_t *T)
