@@ -1,0 +1,55 @@
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 100
+  Levels for tree: 20
+  Build optimal tree with size=1048575
+  After access exercise, time=0.123, tree size=1048575
+    Expect successful search=37, measured=40, trials=49
+    Expect unsuccessful search=40, measured=40, trials=51
+----- End of access driver -----
+
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000
+  Levels for tree: 20
+  Build optimal tree with size=1048575
+  After access exercise, time=0.939, tree size=1048575
+    Expect successful search=37, measured=40, trials=513
+    Expect unsuccessful search=40, measured=40, trials=487
+----- End of access driver -----
+
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 10000
+  Levels for tree: 20
+  Build optimal tree with size=1048575
+  After access exercise, time=7.879, tree size=1048575
+    Expect successful search=37, measured=40, trials=5000
+    Expect unsuccessful search=40, measured=40, trials=5000
+----- End of access driver -----
+
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 100000
+  Levels for tree: 20
+  Build optimal tree with size=1048575
+  After access exercise, time=81.082, tree size=1048575
+    Expect successful search=37, measured=40, trials=49848
+    Expect unsuccessful search=40, measured=40, trials=50152
+----- End of access driver -----
+
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 20
+  Build optimal tree with size=1048575
+  After access exercise, time=777.399, tree size=1048575
+    Expect successful search=37, measured=40, trials=499682
+    Expect unsuccessful search=40, measured=40, trials=500318
+----- End of access driver -----
+
