@@ -88,8 +88,8 @@ int main(int argc, char **argv)
 	const int del[] = {12,20,8,24,40,16,48}; 
         unitDriver(ins, sizeof ins / sizeof(int),
 		   del, sizeof del / sizeof(int));
-    }
-    if (UnitNumber == 1)
+	}
+	if (UnitNumber == 1)
     {
 	// example tests: (48) is missing its right-left child and
 	//                (16) is missing its left-right child
