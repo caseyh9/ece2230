@@ -561,6 +561,18 @@ bst_node_t* remove_node(bst_node_t* node, bst_key_t key, int policy)
 			node->right = remove_node(node->right, temp->key, policy);
 		}
 	}
+	// Update height of current node
+	int left_height, right_height;
+	if (node->left == NULL)
+		left_height = -1;
+	else
+		left_height = node->left->height;
+	if (node->right == NULL)
+		right_height = -1;
+	else
+		right_height = node->right->height;
+		
+	node->height = 1 + max(left_height, right_height);
 
 	// Update height of current node
 	int left_height, right_height;
@@ -593,7 +605,7 @@ bst_node_t* remove_node(bst_node_t* node, bst_key_t key, int policy)
 			return rotate_right(node);
 		}
 		// Right-Left
-		if (balance < -1 && key < node->left->key)
+		if (balance < -1 && key < node->right->key)
 		{
 			node->right = rotate_right(node->right);
 			return rotate_left(node);

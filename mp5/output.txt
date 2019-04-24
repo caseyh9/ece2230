@@ -931,7 +931,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 5
   Build optimal tree with size=31
-  After access exercise, time=61.651, tree size=31
+  After access exercise, time=77.712, tree size=31
     Expect successful search=7.32258, measured=9.99999, trials=491788
     Expect unsuccessful search=10, measured=10, trials=508212
 ----- End of access driver -----
@@ -943,7 +943,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 5
   Build optimal tree with size=31
-  After access exercise, time=61.397, tree size=31
+  After access exercise, time=64.447, tree size=31
     Expect successful search=7.32258, measured=9.99999, trials=491788
     Expect unsuccessful search=10, measured=10, trials=508212
 ----- End of access driver -----
@@ -955,7 +955,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 10
   Build optimal tree with size=1023
-  After access exercise, time=114.486, tree size=1023
+  After access exercise, time=117.847, tree size=1023
     Expect successful search=17.0196, measured=20, trials=499308
     Expect unsuccessful search=20, measured=20, trials=500692
 ----- End of access driver -----
@@ -967,7 +967,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 10
   Build optimal tree with size=1023
-  After access exercise, time=108.998, tree size=1023
+  After access exercise, time=115.203, tree size=1023
     Expect successful search=17.0196, measured=20, trials=499308
     Expect unsuccessful search=20, measured=20, trials=500692
 ----- End of access driver -----
@@ -979,7 +979,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 15
   Build optimal tree with size=32767
-  After access exercise, time=206.694, tree size=32767
+  After access exercise, time=250.833, tree size=32767
     Expect successful search=27.0009, measured=30, trials=499166
     Expect unsuccessful search=30, measured=30, trials=500834
 ----- End of access driver -----
@@ -991,7 +991,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 15
   Build optimal tree with size=32767
-  After access exercise, time=210.964, tree size=32767
+  After access exercise, time=296.262, tree size=32767
     Expect successful search=27.0009, measured=30, trials=499166
     Expect unsuccessful search=30, measured=30, trials=500834
 ----- End of access driver -----
@@ -1003,7 +1003,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 20
   Build optimal tree with size=1048575
-  After access exercise, time=813.953, tree size=1048575
+  After access exercise, time=812.101, tree size=1048575
     Expect successful search=37, measured=40, trials=499682
     Expect unsuccessful search=40, measured=40, trials=500318
 ----- End of access driver -----
@@ -1015,7 +1015,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 20
   Build optimal tree with size=1048575
-  After access exercise, time=822.969, tree size=1048575
+  After access exercise, time=806.272, tree size=1048575
     Expect successful search=37, measured=40, trials=499682
     Expect unsuccessful search=40, measured=40, trials=500318
 ----- End of access driver -----
@@ -1027,7 +1027,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 5
   Build random tree with size=31
-  After access exercise, time=57.988, tree size=31
+  After access exercise, time=57.552, tree size=31
     Expect successful search=9.25806, measured=11.8778, trials=491782
     Expect unsuccessful search=11.875, measured=11.8791, trials=508218
 ----- End of access driver -----
@@ -1039,7 +1039,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 5
   Build random tree with size=31
-  After access exercise, time=60.583, tree size=31
+  After access exercise, time=60.034, tree size=31
     Expect successful search=7.58065, measured=10.2531, trials=491782
     Expect unsuccessful search=10.25, measured=10.2515, trials=508218
 ----- End of access driver -----
@@ -1051,7 +1051,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 10
   Build random tree with size=1023
-  After access exercise, time=110.494, tree size=1023
+  After access exercise, time=113.694, tree size=1023
     Expect successful search=22.4487, measured=25.4397, trials=499323
     Expect unsuccessful search=25.4238, measured=25.4308, trials=500677
 ----- End of access driver -----
@@ -1063,7 +1063,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 10
   Build random tree with size=1023
-  After access exercise, time=106.806, tree size=1023
+  After access exercise, time=105.896, tree size=1023
     Expect successful search=17.4282, measured=20.4067, trials=499323
     Expect unsuccessful search=20.4082, measured=20.4092, trials=500677
 ----- End of access driver -----
@@ -1075,7 +1075,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 15
   Build random tree with size=32767
-  After access exercise, time=244.67, tree size=32767
+  After access exercise, time=244.666, tree size=32767
     Expect successful search=36.1865, measured=39.1976, trials=499020
     Expect unsuccessful search=39.1853, measured=39.1868, trials=500980
 ----- End of access driver -----
@@ -1087,7 +1087,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 15
   Build random tree with size=32767
-  After access exercise, time=221.291, tree size=32767
+  After access exercise, time=227.128, tree size=32767
     Expect successful search=27.596, measured=30.5889, trials=499020
     Expect unsuccessful search=30.595, measured=30.5951, trials=500980
 ----- End of access driver -----
@@ -1099,7 +1099,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 20
   Build random tree with size=1048575
-  After access exercise, time=1045.92, tree size=1048575
+  After access exercise, time=1130.68, tree size=1048575
     Expect successful search=49.9952, measured=53.0409, trials=499871
     Expect unsuccessful search=52.9952, measured=53.0128, trials=500129
 ----- End of access driver -----
@@ -1111,7 +1111,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 20
   Build random tree with size=1048575
-  After access exercise, time=881.909, tree size=1048575
+  After access exercise, time=922.972, tree size=1048575
     Expect successful search=37.7925, measured=40.8009, trials=499871
     Expect unsuccessful search=40.7925, measured=40.7938, trials=500129
 ----- End of access driver -----
@@ -1123,7 +1123,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 5
   Build poor tree with size=31
-  After access exercise, time=68.343, tree size=31
+  After access exercise, time=68.423, tree size=31
     Expect successful search=10.1613, measured=12.7529, trials=491786
     Expect unsuccessful search=12.75, measured=12.7526, trials=508214
 ----- End of access driver -----
@@ -1135,7 +1135,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 5
   Build poor tree with size=31
-  After access exercise, time=66.72, tree size=31
+  After access exercise, time=73.852, tree size=31
     Expect successful search=7.51613, measured=10.1876, trials=491786
     Expect unsuccessful search=10.1875, measured=10.188, trials=508214
 ----- End of access driver -----
@@ -1147,7 +1147,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 10
   Build poor tree with size=1023
-  After access exercise, time=135.35, tree size=1023
+  After access exercise, time=143.609, tree size=1023
     Expect successful search=39.9795, measured=43.0786, trials=499306
     Expect unsuccessful search=42.9375, measured=42.9895, trials=500694
 ----- End of access driver -----
@@ -1159,7 +1159,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 10
   Build poor tree with size=1023
-  After access exercise, time=106.209, tree size=1023
+  After access exercise, time=129.045, tree size=1023
     Expect successful search=17.4633, measured=20.45, trials=499306
     Expect unsuccessful search=20.4434, measured=20.4451, trials=500694
 ----- End of access driver -----
@@ -1171,7 +1171,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 15
   Build poor tree with size=32767
-  After access exercise, time=730.298, tree size=32767
+  After access exercise, time=781.608, tree size=32767
     Expect successful search=268, measured=271.219, trials=499166
     Expect unsuccessful search=270.992, measured=271.265, trials=500834
 ----- End of access driver -----
@@ -1183,7 +1183,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 15
   Build poor tree with size=32767
-  After access exercise, time=265.776, tree size=32767
+  After access exercise, time=218.805, tree size=32767
     Expect successful search=27.7669, measured=30.7659, trials=499166
     Expect unsuccessful search=30.766, measured=30.7637, trials=500834
 ----- End of access driver -----
@@ -1195,7 +1195,7 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 20
   Build poor tree with size=1048575
-  After access exercise, time=3795.52, tree size=1048575
+  After access exercise, time=3784.14, tree size=1048575
     Expect successful search=1042, measured=1047.85, trials=499703
     Expect unsuccessful search=1045, measured=1045.69, trials=500297
 ----- End of access driver -----
@@ -1207,8 +1207,141 @@ Seed: 1476379020
   Access trials: 1000000
   Levels for tree: 20
   Build poor tree with size=1048575
-  After access exercise, time=797.227, tree size=1048575
+  After access exercise, time=745.42, tree size=1048575
     Expect successful search=37.8976, measured=40.8981, trials=499703
     Expect unsuccessful search=40.8975, measured=40.8945, trials=500297
 ----- End of access driver -----
 
+Seed: 2
+
+----- Equilibrium test driver -----
+  Trials in equilibrium: 0
+  Levels in initial tree: 5
+  Initial random tree size=31
+  Expect successful search for initial tree=9.32258
+  Expect unsuccessful search for initial tree=11.9375
+        62
+             60
+   58
+                            56
+                       54
+                  52
+                            50
+                       48
+                                 46
+                            44
+                                 42
+                                      40
+             38
+                            36
+                                 34
+                       32
+                                      30
+                                 28
+                            26
+                                 24
+                  22
+                            20
+                       18
+                                 16
+                            14
+        12
+                  10
+                        8
+              6
+                        4
+                   2
+
+                 /-------------------------------------------------------------------58----\ 
+        /-------12-------------------------------------\                                 /-62
+  /-----6----\                  /----------------------38-------------------\           60
+  2-\      /-10           /----22-------------\                        /----52-\ 
+     4     8        /----18-\         /-------32----\            /----48-\     54-\ 
+                   14-\     20     /-26-\         /-36        /-44-\     50       56
+                      16          24    28-\     34        /-42    46
+                                           30             40
+  After exercise, time=0.001, new tree size=31
+  successful searches during exercise=-nan, trials=0
+  unsuccessful searches during exercise=-nan, trials=0
+  Validating tree...passed
+  After access experiment, time=0, tree size=31
+  Expect successful search=9.32258, measured=-nan, trials=0
+  Expect unsuccessful search=11.9375, measured=-nan, trials=0
+----- End of equilibrium test -----
+
+Output for shape=-e, levels=5, policy=bst
+Seed: 1476379020
+
+----- Equilibrium test driver -----
+  Trials in equilibrium: 1000000
+  Levels in initial tree: 5
+  Initial random tree size=31
+  Expect successful search for initial tree=9.25806
+  Expect unsuccessful search for initial tree=11.875
+  After exercise, time=140.263, new tree size=33
+  successful searches during exercise=9.32659, trials=499799
+  unsuccessful searches during exercise=11.4246, trials=500201
+  Validating tree...passed
+  After access experiment, time=55.328, tree size=33
+  Expect successful search=9.30303, measured=11.4081, trials=515650
+  Expect unsuccessful search=11.9412, measured=11.4108, trials=484350
+----- End of equilibrium test -----
+
+Output for shape=-e, levels=5, policy=avl
+Output for shape=-e, levels=10, policy=bst
+Seed: 1476379020
+
+----- Equilibrium test driver -----
+  Trials in equilibrium: 1000000
+  Levels in initial tree: 10
+  Initial random tree size=1023
+  Expect successful search for initial tree=22.4487
+  Expect unsuccessful search for initial tree=25.4238
+  After exercise, time=225.18, new tree size=1019
+  successful searches during exercise=21.0152, trials=499795
+  unsuccessful searches during exercise=23.3498, trials=500205
+  Validating tree...passed
+  After access experiment, time=106.634, tree size=1019
+  Expect successful search=20.3366, measured=23.108, trials=497360
+  Expect unsuccessful search=23.3137, measured=23.117, trials=502640
+----- End of equilibrium test -----
+
+Output for shape=-e, levels=10, policy=avl
+Output for shape=-e, levels=15, policy=bst
+Seed: 1476379020
+
+----- Equilibrium test driver -----
+  Trials in equilibrium: 1000000
+  Levels in initial tree: 15
+  Initial random tree size=32767
+  Expect successful search for initial tree=36.1865
+  Expect unsuccessful search for initial tree=39.1853
+  After exercise, time=420.176, new tree size=32690
+  successful searches during exercise=35.3247, trials=499830
+  unsuccessful searches during exercise=37.6758, trials=500170
+  Validating tree...passed
+  After access experiment, time=239.048, tree size=32690
+  Expect successful search=34.9353, measured=37.3238, trials=499168
+  Expect unsuccessful search=37.9342, measured=37.3218, trials=500832
+----- End of equilibrium test -----
+
+Output for shape=-e, levels=15, policy=avl
+Output for shape=-e, levels=20, policy=bst
+Seed: 1476379020
+
+----- Equilibrium test driver -----
+  Trials in equilibrium: 1000000
+  Levels in initial tree: 20
+  Initial random tree size=1048575
+  Expect successful search for initial tree=49.9952
+  Expect unsuccessful search for initial tree=52.9952
+  After exercise, time=1458.74, new tree size=1047931
+  successful searches during exercise=49.9294, trials=500168
+  unsuccessful searches during exercise=52.4913, trials=499832
+  Validating tree...passed
+  After access experiment, time=1033.52, tree size=1047931
+  Expect successful search=49.8431, measured=52.1266, trials=499682
+  Expect unsuccessful search=52.8431, measured=52.1065, trials=500318
+----- End of equilibrium test -----
+
+Output for shape=-e, levels=20, policy=avl

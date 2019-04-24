@@ -43,3 +43,17 @@ do
 		done
 	done
 done
+
+# Tests for AVL Deletions
+# Test with 0 accesses that prints out the resulting tree
+./lab5 -e -w 5 -t 0 -v -s 2
+
+# Tests with 1000000 accesses
+for l in $levels
+do 
+	for p in $policies
+	do
+		echo "Output for shape=-e, levels=$l, policy=$p"
+		./lab5 -e -w $l -t 1000000 -f $p
+	done
+done
