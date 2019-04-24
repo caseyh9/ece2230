@@ -13,6 +13,7 @@
 # and sort policy
 shapes='o r p'
 levels='5 10 15 20'
+trials='1000 10000 100000 1000000'
 policies='bst avl'
 
 # Test unit drivers with valgrind
@@ -36,10 +37,13 @@ for s in $shapes
 do
 	for l in $levels
 	do
-		for p in $policies
+		for t in $trials
 		do
-			echo "Output for shape=$s, levels=$l, policy=$p"
-			./lab5 -$s -w $l -t 1000000 -f $p
+			for p in $policies
+			do
+				echo "Output for shape=$s, levels=$l, policy=$p"
+				./lab5 -$s -w $l -t 1000000 -f $p
+			done
 		done
 	done
 done
