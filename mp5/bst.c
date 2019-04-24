@@ -35,10 +35,12 @@ void bst_destruct_nodes(bst_node_t *root);
 bst_node_t* insert_node(bst_node_t *node, bst_key_t key, data_t elem_ptr, int policy);
 bst_node_t* rotate_right(bst_node_t* node);
 bst_node_t* rotate_left(bst_node_t* node);
+int height(bst_node_t* node);
 int calc_int_path(bst_node_t *node, int level);
 int max(int a, int b);
 bst_node_t* remove_node(bst_node_t* node, bst_key_t key, int policy);
 bst_node_t* least_node(bst_node_t *node);
+int find_balance(bst_node_t* node);
 
 
 /* Finds the tree element with the matching key and returns the data that is
@@ -283,23 +285,15 @@ bst_node_t* insert_node(bst_node_t *node, bst_key_t key, data_t elem_ptr, int po
 	}
 
 	// Update height of current node
-	int left_height, right_height;
-	if (node->left == NULL)
-		left_height = -1;
-	else
-		left_height = node->left->height;
-	if (node->right == NULL)
-		right_height = -1;
-	else
-		right_height = node->right->height;
-		
-	node->height = 1 + max(left_height, right_height);
+	node->height = 1 + max(height(node->left), height(node->right));
 
 	// Check AVL property if tree has AVL policy
 	if (policy == AVL)
 	{
-		// Check for 4 rotation cases
-		int balance = left_height - right_height;
+		// Find balance of node to see if it violates avl property
+		int balance = find_balance(node);
+
+		// 4 Cases of rotation to restore avl property
 		// Left-Left
 		if (balance > 1 && key < node->left->key)
 			return rotate_right(node);
@@ -422,6 +416,23 @@ bst_node_t* rotate_left(bst_node_t* A)
 	return B;
 }
 
+/* Returns the height of the given node, or returns 0. This works
+ * as a helper function for updating heights, handling the condition
+ * of NULL pointers in a centralized way.
+ *
+ * node - the node to find the height of
+ *
+ * Returns: node->height if node is not NULL, -1 if it is
+ */
+int height(bst_node_t* node)
+{
+	if (node == NULL)
+	{
+		return -1;
+	}
+	return node->height;
+}
+
 /* DO NOT NEED TO IMPLEMENT FOR REGULAR ASSIGNMENT. ONLY FOR EXTRA ASSIGNMENT.
  *
  * Removes the item in the tree with the matching key.
@@ -512,108 +523,122 @@ data_t bst_remove(bst_t *T, bst_key_t key)
  */
 bst_node_t* remove_node(bst_node_t* node, bst_key_t key, int policy)
 {
-	bst_node_t *temp;
-	// If key is not in the tree and we have gone past the leaves
+
+	// If node is NULL, don't do anything else
 	if (node == NULL)
+	{
 		return NULL;
-	// Check if node should be in left or right child
+	}
+
+	// See if we need to travel further down the tree
 	if (key < node->key)
+	{
 		node->left = remove_node(node->left, key, policy);
+	}
 	else if (key > node->key)
+	{
 		node->right = remove_node(node->right, key, policy);
+	}
 	else
 	{
-		// Key matches current node
-		// If node has no children, temp is NULL, and if node has
-		// one child, temp is the other child
-		if (node->left == NULL && node->right == NULL)
+		// Here we have found the node with the matching key
+		// First check for node having no children or one child
+		if (node->left == NULL || node->right == NULL)
 		{
-			temp = NULL;
-			free(node);
-			return temp;
+			bst_node_t* temp = node->left;
+			if (temp == NULL)
+			{
+				temp = node->right;
+			}
+			// If temp is still NULL then both left and right must be NULL
+			if (temp == NULL)
+			{
+				temp = node;
+				node = NULL;
+			}
+			// Otherwise, need to move temp into node
+			else
+			{
+				*node = *temp;
+			}
+			// Free whatever remains in temp, either the childless node, or
+			// the remains of what was moved
+			free(temp);
 		}
-		else if (node->left == NULL)
-		{
-			temp = node->right;
-			// Free node
-			node->left = NULL;
-			node->right = NULL;
-			free(node);
-			return temp;
-		}
-		else if (node->right == NULL)
-		{
-			temp = node->left;
-			// Free node
-			node->left = NULL;
-			node->right = NULL;
-			free(node);
-			return temp;
-		}
+		// Here the node we want to remove has 2 children
 		else
 		{
-			// If node has 2 children, need to find its successor to
-			// replace its position
-			temp = least_node(node->right);
+			// Get node's successor to take its place
+			bst_node_t* temp = least_node(node->right);
+			// Copy the successor's data into node
 			node->key = temp->key;
 			node->data_ptr = temp->data_ptr;
-			// Then remove the successor from its original position
+			// Remove the successor from its previous location
 			node->right = remove_node(node->right, temp->key, policy);
 		}
 	}
-	// Update height of current node
-	int left_height, right_height;
-	if (node->left == NULL)
-		left_height = -1;
-	else
-		left_height = node->left->height;
-	if (node->right == NULL)
-		right_height = -1;
-	else
-		right_height = node->right->height;
-		
-	node->height = 1 + max(left_height, right_height);
 
-	// Update height of current node
-	int left_height, right_height;
-	if (node->left == NULL)
-		left_height = -1;
-	else
-		left_height = node->left->height;
-	if (node->right == NULL)
-		right_height = -1;
-	else
-		right_height = node->right->height;
-		
-	node->height = 1 + max(left_height, right_height);
+	// If the tree is one node return that here
+	if (node == NULL)
+	{
+		return node;
+	}
 
-	// Check AVL property if tree has AVL policy
+	// Update height of node
+	node->height = 1 + max(height(node->left), height(node->right));
+
+	// Check the balance of node to see if it violates the avl property
+	// (only if using avl policy)
 	if (policy == AVL)
 	{
-		// Check for 4 rotation cases
-		int balance = left_height - right_height;
+		int balance = find_balance(node);
+
+		// 4 possible cases for how we need to restore avl property
 		// Left-Left
-		if (balance > 1 && key < node->left->key)
+		if (balance > 1 && find_balance(node->left) >= 0)
+		{
 			return rotate_right(node);
+		}
 		// Right-Right
-		if (balance < -1 && key > node->right->key)
+		if (balance < -1 && find_balance(node->right) <= 0)
+		{
 			return rotate_left(node);
+		}
 		// Left-Right
-		if (balance > 1 && key > node->left->key)
+		if (balance > 1 && find_balance(node->left) < 0)
 		{
 			node->left = rotate_left(node->left);
 			return rotate_right(node);
 		}
 		// Right-Left
-		if (balance < -1 && key < node->right->key)
+		if (balance < -1 && find_balance(node->right) > 0)
 		{
 			node->right = rotate_right(node->right);
 			return rotate_left(node);
 		}
+
 	}
 
-	// Return original or replaced node
+	// If no rotations are needed (or we don't have avl policy)
+	// return current node
 	return node;
+}
+
+/* Finds the balance of a given node, used to determine if that node
+ * maintains the avl property
+ *
+ * node - the node in a bst that we are finding hte balance of
+ *
+ * Returns: 0 if node is NULL, otherwise returns the difference in
+ * the heights of the left and right subtrees
+ */
+int find_balance(bst_node_t* node)
+{
+	if (node == NULL)
+	{
+		return 0;
+	}
+	return (height(node->left) - height(node->right));
 }
 
 /* Finds the descendant of node with the lowest key. This is used as
