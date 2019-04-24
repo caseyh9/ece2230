@@ -41,8 +41,8 @@ do
 		do
 			for p in $policies
 			do
-				echo "Output for shape=$s, levels=$l, policy=$p"
-				./lab5 -$s -w $l -t 1000000 -f $p
+				echo "Output for shape=$s, levels=$l, trials=$t, policy=$p"
+				./lab5 -$s -w $l -t $t -f $p
 			done
 		done
 	done
