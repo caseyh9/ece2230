@@ -4,16 +4,18 @@
 # Casey Hird
 # crhird
 # ECE 2230 Spring 2019
-# MP3
+# MP5
 
 # Script to run test cases
 
 
-# set these lists with the parameter space's values
+# Set values to be tested for initial shape, levels in the tree,
+# and sort policy
 shapes='o r p'
 levels='5 10 15 20'
 policies='bst avl'
 
+# Test unit drivers with valgrind
 valgrind --leak-check=yes --log-file='valgrind_output0.txt' ./lab5 -u 0
 valgrind --leak-check=yes --log-file='valgrind_output1.txt' ./lab5 -u 1
 valgrind --leak-check=yes --log-file='valgrind_output2.txt' ./lab5 -u 2
@@ -36,6 +38,7 @@ do
 	do
 		for p in $policies
 		do
+			echo "Output for shape=$s, levels=$l, policy=$p"
 			./lab5 -$s -w $l -t 1000000 -f $p
 		done
 	done

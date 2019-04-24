@@ -4,7 +4,12 @@
  * ECE 2230 Spring 2019
  * MP 5
  *
- * Interface and tree definition for basic binary tree
+ * Purpose: Interface and tree definition for basic binary tree
+ *
+ * Assumptions: The implementations in bst.c are included in the
+ * same directory.
+ *
+ * Known bugs: none
  */
 
 enum balanceoptions {BST, AVL};

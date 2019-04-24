@@ -4,7 +4,12 @@
  * ECE 2230 Spring 2019
  * MP 5
  *
- * Implementation of tree interface for basic binary tree
+ * Purpse: Implementation of tree interface for basic binary tree
+ *
+ * Assumptions: We have access to the definitions in the header file
+ * bst.h in the same directory.
+ *
+ * Known bugs: none
  */
 #include <stdlib.h>
 #include <stdio.h>

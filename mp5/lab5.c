@@ -2,7 +2,7 @@
  * Lab5: Binary Search Trees
  * ECE 2230, Spring 2019
  *
- * This file contains drivers to test the BST package.
+ * Purpose: This file contains drivers to test the BST package.
  *
  * The unit driver builds a custom tree and removes selected keys 
  *   -u 1:  run the unit driver with a custom tree
@@ -25,6 +25,10 @@
  * with equal probability.
  *   -e run the equilibrium driver
  *
+ * Assumptions: No attempt is made to make a tree with a size
+ * larger than the maximum value of an int.
+ *
+ * Known bugs: Will not work for too large of a tree, as stated above.
  */
 #include <stdlib.h>
 #include <stdio.h>

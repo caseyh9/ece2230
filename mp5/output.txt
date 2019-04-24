@@ -1,55 +1,1214 @@
 Seed: 1476379020
 
------ Access driver -----
-  Access trials: 100
-  Levels for tree: 20
-  Build optimal tree with size=1048575
-  After access exercise, time=0.123, tree size=1048575
-    Expect successful search=37, measured=40, trials=49
-    Expect unsuccessful search=40, measured=40, trials=51
------ End of access driver -----
+
+ ====== Unit Driver ======
+
+Inserting 14 items into tree
+Created tree for testing removes
+             56
+        48
+                       46
+                  44
+                       42
+             40
+   32
+                  28
+             24
+                  20
+        16
+                  12
+              8
+                   4
+
+           /----------32-------------\ 
+     /----16----\         /----------48-\ 
+  /--8-\      /-24-\     40----\        56
+  4    12    20    28        /-44-\ 
+                            42    46
+Removing 7 items from tree
+ -- Test (0) about to remove key 12
+             56
+        48
+                       46
+                  44
+                       42
+             40
+   32
+                  28
+             24
+                  20
+        16
+              8
+                   4
+
+        /----------32-------------\ 
+     /-16----\         /----------48-\ 
+  /--8     /-24-\     40----\        56
+  4       20    28        /-44-\ 
+                         42    46
+ -- Test (1) about to remove key 20
+             56
+        48
+                       46
+                  44
+                       42
+             40
+   32
+                  28
+             24
+        16
+              8
+                   4
+
+        /-------32-------------\ 
+     /-16-\         /----------48-\ 
+  /--8    24-\     40----\        56
+  4          28        /-44-\ 
+                      42    46
+ -- Test (2) about to remove key 8
+             56
+        48
+                       46
+                  44
+                       42
+             40
+   32
+                  28
+             24
+        16
+              4
+
+     /-------32-------------\ 
+  /-16-\         /----------48-\ 
+  4    24-\     40----\        56
+          28        /-44-\ 
+                   42    46
+ -- Test (3) about to remove key 24
+             56
+        48
+                       46
+                  44
+                       42
+             40
+   32
+             28
+        16
+              4
+
+     /----32-------------\ 
+  /-16-\      /----------48-\ 
+  4    28    40----\        56
+                 /-44-\ 
+                42    46
+ -- Test (4) about to remove key 40
+             56
+        48
+                  46
+             44
+                  42
+   32
+             28
+        16
+              4
+
+     /----32----------\ 
+  /-16-\         /----48-\ 
+  4    28     /-44-\     56
+             42    46
+ -- Test (5) about to remove key 16
+             56
+        48
+                  46
+             44
+                  42
+   32
+        28
+              4
+
+     /-32----------\ 
+  /-28        /----48-\ 
+  4        /-44-\     56
+          42    46
+ -- Test (6) about to remove key 48
+        56
+                  46
+             44
+                  42
+   32
+        28
+              4
+
+     /-32----------\ 
+  /-28        /----56
+  4        /-44-\ 
+          42    46
+Seed: 1476379020
+
+
+ ====== Unit Driver ======
+
+Inserting 13 items into tree
+Created tree for testing removes
+                  60
+             56
+        48
+                  44
+             40
+                  36
+   32
+                  28
+             24
+                  20
+        16
+              8
+                   4
+
+        /----------32----------\ 
+     /-16----\            /----48-\ 
+  /--8     /-24-\      /-40-\     56-\ 
+  4       20    28    36    44       60
+Removing 3 items from tree
+ -- Test (0) about to remove key 16
+                  60
+             56
+        48
+                  44
+             40
+                  36
+   32
+                  28
+             24
+        20
+              8
+                   4
+
+        /-------32----------\ 
+     /-20-\            /----48-\ 
+  /--8    24-\      /-40-\     56-\ 
+  4          28    36    44       60
+ -- Test (1) about to remove key 48
+             60
+        56
+                  44
+             40
+                  36
+   32
+                  28
+             24
+        20
+              8
+                   4
+
+        /-------32----------\ 
+     /-20-\            /----56-\ 
+  /--8    24-\      /-40-\     60
+  4          28    36    44
+ -- Test (2) about to remove key 32
+             60
+        56
+                  44
+             40
+   36
+                  28
+             24
+        20
+              8
+                   4
+
+        /-------36-------\ 
+     /-20-\         /----56-\ 
+  /--8    24-\     40-\     60
+  4          28       44
+
+
+ ====== Unit Driver ======
+
+Inserting 13 items into tree
+Created tree for testing removes
+                  60
+             56
+                  52
+        48
+             40
+                  36
+   32
+                  28
+             24
+        16
+                  12
+              8
+                   4
+
+           /-------32-------\ 
+     /----16-\            /-48----\ 
+  /--8-\     24-\      /-40     /-56-\ 
+  4    12       28    36       52    60
+Removing 3 items from tree
+ -- Test (0) about to remove key 16
+                  60
+             56
+                  52
+        48
+             40
+                  36
+   32
+             28
+        24
+                  12
+              8
+                   4
+
+           /----32-------\ 
+     /----24-\         /-48----\ 
+  /--8-\     28     /-40     /-56-\ 
+  4    12          36       52    60
+ -- Test (1) about to remove key 48
+                  60
+             56
+        52
+             40
+                  36
+   32
+             28
+        24
+                  12
+              8
+                   4
+
+           /----32-------\ 
+     /----24-\         /-52-\ 
+  /--8-\     28     /-40    56-\ 
+  4    12          36          60
+ -- Test (2) about to remove key 32
+                  60
+             56
+        52
+             40
+   36
+             28
+        24
+                  12
+              8
+                   4
+
+           /----36----\ 
+     /----24-\      /-52-\ 
+  /--8-\     28    40    56-\ 
+  4    12                   60
+Seed: 1476379020
+
+
+ ====== Unit Driver ======
+
+Inserting 16 items into tree
+Created tree for testing removes
+  200
+                 175
+            150
+                           140
+                      135
+                           130
+                 125
+       100
+                       85
+                                 82
+                            80
+                                 78
+                  75
+                       65
+             50
+                  25
+
+                          /------------------200
+     /------------------100-------------\ 
+  /-50----\                  /---------150-\ 
+ 25     /-75----------\    125----\       175
+       65        /----85        /135-\ 
+              /-80-\          130   140
+             78    82
+Removing 3 items from tree
+ -- Test (0) about to remove key 100
+  200
+                 175
+            150
+                      140
+                 135
+                      130
+       125
+                       85
+                                 82
+                            80
+                                 78
+                  75
+                       65
+             50
+                  25
+
+                          /---------------200
+     /------------------125----------\ 
+  /-50----\                     /---150-\ 
+ 25     /-75----------\      /135-\    175
+       65        /----85   130   140
+              /-80-\ 
+             78    82
+ -- Test (1) about to remove key 85
+  200
+                 175
+            150
+                      140
+                 135
+                      130
+       125
+                            82
+                       80
+                            78
+                  75
+                       65
+             50
+                  25
+
+                       /---------------200
+     /---------------125----------\ 
+  /-50----\                  /---150-\ 
+ 25     /-75----\         /135-\    175
+       65     /-80-\    130   140
+             78    82
+ -- Test (2) about to remove key 125
+  200
+                 175
+            150
+                      140
+                 135
+       130
+                            82
+                       80
+                            78
+                  75
+                       65
+             50
+                  25
+
+                       /------------200
+     /---------------130-------\ 
+  /-50----\               /---150-\ 
+ 25     /-75----\       135-\    175
+       65     /-80-\       140
+             78    82
+Seed: 1476379020
+
+
+ ====== Unit Driver ======
+
+Inserting 2 items into tree
+Created tree for testing removes
+   10
+
+ 10
+Removing 1 items from tree
+ -- Test (0) about to remove key 10
+
+
+Seed: 1476379020
+
+
+ ====== Unit Driver ======
+
+Inserting 8 items into tree
+Created tree for testing removes
+                                       8
+                                  7
+                             6
+                        5
+                   4
+              3
+         2
+    1
+
+  1-\ 
+     2-\ 
+        3-\ 
+           4-\ 
+              5-\ 
+                 6-\ 
+                    7-\ 
+                       8
+Removing 4 items from tree
+ -- Test (0) about to remove key 7
+                                  8
+                             6
+                        5
+                   4
+              3
+         2
+    1
+
+  1-\ 
+     2-\ 
+        3-\ 
+           4-\ 
+              5-\ 
+                 6-\ 
+                    8
+ -- Test (1) about to remove key 5
+                             8
+                        6
+                   4
+              3
+         2
+    1
+
+  1-\ 
+     2-\ 
+        3-\ 
+           4-\ 
+              6-\ 
+                 8
+ -- Test (2) about to remove key 8
+                        6
+                   4
+              3
+         2
+    1
+
+  1-\ 
+     2-\ 
+        3-\ 
+           4-\ 
+              6
+ -- Test (3) about to remove key 1
+                   6
+              4
+         3
+    2
+
+  2-\ 
+     3-\ 
+        4-\ 
+           6
+Seed: 1476379020
+
+
+ ====== Unit Driver ======
+
+Inserting 5 items into tree
+Created tree for testing removes
+          39825074
+     38238
+    0
+     -18921
+          -84928
+
+     /--0-\ 
+  /---18921   38238-\ 
+-84928         39825074
+Removing 5 items from tree
+ -- Test (0) about to remove key -18921
+          39825074
+     38238
+    0
+     -84928
+
+  /--0-\ 
+-84928   38238-\ 
+         39825074
+ -- Test (1) about to remove key 38238
+     39825074
+    0
+     -84928
+
+  /--0-\ 
+-84928   39825074
+ -- Test (2) about to remove key 0
+39825074
+     -84928
+
+  /39825074
+-84928
+ -- Test (3) about to remove key -84928
+39825074
+
+39825074
+ -- Test (4) about to remove key 39825074
+
+
+Seed: 1476379020
+
+
+ ====== Unit Driver ======
+
+Inserting 13 items into tree
+Created tree for testing removes
+             42
+        25
+             16
+   10
+              3
+         2
+
+  /----10----\ 
+  2-\      /-25-\ 
+     3    16    42
+Removing 11 items from tree
+ -- Test (0) about to remove key 10
+             42
+        25
+   16
+              3
+         2
+
+  /----16-\ 
+  2-\     25-\ 
+     3       42
+ -- Test (1) about to remove key 2
+             42
+        25
+   16
+         3
+
+  /-16-\ 
+  3    25-\ 
+          42
+ -- Test (2) about to remove key 2
+             42
+        25
+   16
+         3
+
+  /-16-\ 
+  3    25-\ 
+          42
+
+
+FAILED to find the key in the tree ######
+ -- Test (3) about to remove key 2
+             42
+        25
+   16
+         3
+
+  /-16-\ 
+  3    25-\ 
+          42
+
+
+FAILED to find the key in the tree ######
+ -- Test (4) about to remove key 42
+        25
+   16
+         3
+
+  /-16-\ 
+  3    25
+ -- Test (5) about to remove key 25
+   16
+         3
+
+  /-16
+  3
+ -- Test (6) about to remove key 25
+   16
+         3
+
+  /-16
+  3
+
+
+FAILED to find the key in the tree ######
+ -- Test (7) about to remove key 25
+   16
+         3
+
+  /-16
+  3
+
+
+FAILED to find the key in the tree ######
+ -- Test (8) about to remove key 10
+   16
+         3
+
+  /-16
+  3
+
+
+FAILED to find the key in the tree ######
+ -- Test (9) about to remove key 3
+   16
+
+ 16
+ -- Test (10) about to remove key 3
+   16
+
+ 16
+
+
+FAILED to find the key in the tree ######
+Seed: 1476379020
+
+
+ ====== Unit Driver ======
+
+Inserting 7 items into tree
+Created tree for testing removes
+                  16
+             14
+        12
+   10
+              8
+         7
+              4
+
+     /----10-\ 
+  /--7-\     12-\ 
+  4     8       14-\ 
+                   16
+Removing 7 items from tree
+ -- Test (0) about to remove key 10
+             16
+        14
+   12
+              8
+         7
+              4
+
+     /----12-\ 
+  /--7-\     14-\ 
+  4     8       16
+ -- Test (1) about to remove key 12
+        16
+   14
+              8
+         7
+              4
+
+     /----14-\ 
+  /--7-\     16
+  4     8
+ -- Test (2) about to remove key 14
+   16
+              8
+         7
+              4
+
+     /----16
+  /--7-\ 
+  4     8
+ -- Test (3) about to remove key 16
+         8
+    7
+         4
+
+  /--7-\ 
+  4     8
+ -- Test (4) about to remove key 7
+    8
+         4
+
+  /--8
+  4
+ -- Test (5) about to remove key 8
+    4
+
+  4
+ -- Test (6) about to remove key 4
+
+
+Seed: 1476379020
+
+
+ ====== Unit Driver ======
+
+Inserting 7 items into tree
+Created tree for testing removes
+             18
+        15
+             13
+   10
+              7
+         5
+              3
+
+     /----10----\ 
+  /--5-\      /-15-\ 
+  3     7    13    18
+Removing 7 items from tree
+ -- Test (0) about to remove key 3
+             18
+        15
+             13
+   10
+              7
+         5
+
+  /----10----\ 
+  5-\      /-15-\ 
+     7    13    18
+ -- Test (1) about to remove key 7
+             18
+        15
+             13
+   10
+         5
+
+  /-10----\ 
+  5     /-15-\ 
+       13    18
+ -- Test (2) about to remove key 13
+             18
+        15
+   10
+         5
+
+  /-10-\ 
+  5    15-\ 
+          18
+ -- Test (3) about to remove key 18
+        15
+   10
+         5
+
+  /-10-\ 
+  5    15
+ -- Test (4) about to remove key 5
+        15
+   10
+
+ 10-\ 
+    15
+ -- Test (5) about to remove key 15
+   10
+
+ 10
+ -- Test (6) about to remove key 10
+
 
 Seed: 1476379020
 
 ----- Access driver -----
-  Access trials: 1000
-  Levels for tree: 20
-  Build optimal tree with size=1048575
-  After access exercise, time=0.939, tree size=1048575
-    Expect successful search=37, measured=40, trials=513
-    Expect unsuccessful search=40, measured=40, trials=487
+  Access trials: 0
+  Levels for tree: 5
+  Build optimal tree with size=31
+                       62
+                  60
+                       58
+             56
+                       54
+                  52
+                       50
+        48
+                       46
+                  44
+                       42
+             40
+                       38
+                  36
+                       34
+   32
+                       30
+                  28
+                       26
+             24
+                       22
+                  20
+                       18
+        16
+                       14
+                  12
+                       10
+              8
+                        6
+                   4
+                        2
+
+                       /----------------------32----------------------\ 
+           /----------16----------\                        /----------48----------\ 
+     /-----8----\            /----24----\            /----40----\            /----56----\ 
+  /--4-\      /-12-\      /-20-\      /-28-\      /-36-\      /-44-\      /-52-\      /-60-\ 
+  2     6    10    14    18    22    26    30    34    38    42    46    50    54    58    62
 ----- End of access driver -----
 
+Seed: 1
+
+----- Access driver -----
+  Access trials: 0
+  Levels for tree: 5
+  Build random tree with size=31
+                  62
+                            60
+                       58
+                            56
+             54
+                       52
+                                 50
+                                      48
+                            46
+                                      44
+                                 42
+                  40
+                            38
+                       36
+                                 34
+                            32
+        30
+                  28
+             26
+                            24
+                       22
+                            20
+                                      18
+                                 16
+                                      14
+                  12
+                            10
+                        8
+                             6
+    4
+         2
+
+  /--4-------------------------------------\ 
+  2                                   /----30----------------------------------\ 
+                 /-------------------26-\                  /-------------------54----------\ 
+           /----12-------------\        28           /----40----------------\         /----62
+        /--8-\               /-22-\            /----36-\            /-------52     /-58-\ 
+        6    10        /----20    24          32-\     38     /----46----\        56    60
+                    /-16-\                       34          42-\      /-50
+                   14    18                                     44    48
+----- End of access driver -----
+
+Seed: 2
+
+----- Access driver -----
+  Access trials: 0
+  Levels for tree: 5
+  Build poor tree with size=31
+             62
+                       60
+                                 58
+                                           56
+                                      54
+                            52
+                  50
+        48
+                  46
+                            44
+                                      42
+                                           40
+                                 38
+                       36
+             34
+   32
+                                           30
+                                      28
+                                 26
+                            24
+                       22
+                  20
+             18
+        16
+             14
+                       12
+                                 10
+                                            8
+                                       6
+                             4
+                   2
+
+                       /----------------------32----------------------\ 
+                    /-16-\                        /-------------------48-------------------\ 
+  /----------------14    18-\                    34----------------\      /----------------62
+  2-------------\           20-\                     /-------------46    50-------------\ 
+     /----------12             22-\                 36----------\            /----------60
+     4-------\                    24-\                  /-------44          52-------\ 
+        /----10                      26-\              38----\                  /----58
+        6-\                             28-\               /-42                54-\ 
+           8                               30             40                      56
+----- End of access driver -----
+
+Output for shape=o, levels=5, policy=bst
 Seed: 1476379020
 
 ----- Access driver -----
-  Access trials: 10000
-  Levels for tree: 20
-  Build optimal tree with size=1048575
-  After access exercise, time=7.879, tree size=1048575
-    Expect successful search=37, measured=40, trials=5000
-    Expect unsuccessful search=40, measured=40, trials=5000
+  Access trials: 1000000
+  Levels for tree: 5
+  Build optimal tree with size=31
+  After access exercise, time=61.651, tree size=31
+    Expect successful search=7.32258, measured=9.99999, trials=491788
+    Expect unsuccessful search=10, measured=10, trials=508212
 ----- End of access driver -----
 
+Output for shape=o, levels=5, policy=avl
 Seed: 1476379020
 
 ----- Access driver -----
-  Access trials: 100000
-  Levels for tree: 20
-  Build optimal tree with size=1048575
-  After access exercise, time=81.082, tree size=1048575
-    Expect successful search=37, measured=40, trials=49848
-    Expect unsuccessful search=40, measured=40, trials=50152
+  Access trials: 1000000
+  Levels for tree: 5
+  Build optimal tree with size=31
+  After access exercise, time=61.397, tree size=31
+    Expect successful search=7.32258, measured=9.99999, trials=491788
+    Expect unsuccessful search=10, measured=10, trials=508212
 ----- End of access driver -----
 
+Output for shape=o, levels=10, policy=bst
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 10
+  Build optimal tree with size=1023
+  After access exercise, time=114.486, tree size=1023
+    Expect successful search=17.0196, measured=20, trials=499308
+    Expect unsuccessful search=20, measured=20, trials=500692
+----- End of access driver -----
+
+Output for shape=o, levels=10, policy=avl
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 10
+  Build optimal tree with size=1023
+  After access exercise, time=108.998, tree size=1023
+    Expect successful search=17.0196, measured=20, trials=499308
+    Expect unsuccessful search=20, measured=20, trials=500692
+----- End of access driver -----
+
+Output for shape=o, levels=15, policy=bst
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 15
+  Build optimal tree with size=32767
+  After access exercise, time=206.694, tree size=32767
+    Expect successful search=27.0009, measured=30, trials=499166
+    Expect unsuccessful search=30, measured=30, trials=500834
+----- End of access driver -----
+
+Output for shape=o, levels=15, policy=avl
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 15
+  Build optimal tree with size=32767
+  After access exercise, time=210.964, tree size=32767
+    Expect successful search=27.0009, measured=30, trials=499166
+    Expect unsuccessful search=30, measured=30, trials=500834
+----- End of access driver -----
+
+Output for shape=o, levels=20, policy=bst
 Seed: 1476379020
 
 ----- Access driver -----
   Access trials: 1000000
   Levels for tree: 20
   Build optimal tree with size=1048575
-  After access exercise, time=777.399, tree size=1048575
+  After access exercise, time=813.953, tree size=1048575
     Expect successful search=37, measured=40, trials=499682
     Expect unsuccessful search=40, measured=40, trials=500318
+----- End of access driver -----
+
+Output for shape=o, levels=20, policy=avl
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 20
+  Build optimal tree with size=1048575
+  After access exercise, time=822.969, tree size=1048575
+    Expect successful search=37, measured=40, trials=499682
+    Expect unsuccessful search=40, measured=40, trials=500318
+----- End of access driver -----
+
+Output for shape=r, levels=5, policy=bst
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 5
+  Build random tree with size=31
+  After access exercise, time=57.988, tree size=31
+    Expect successful search=9.25806, measured=11.8778, trials=491782
+    Expect unsuccessful search=11.875, measured=11.8791, trials=508218
+----- End of access driver -----
+
+Output for shape=r, levels=5, policy=avl
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 5
+  Build random tree with size=31
+  After access exercise, time=60.583, tree size=31
+    Expect successful search=7.58065, measured=10.2531, trials=491782
+    Expect unsuccessful search=10.25, measured=10.2515, trials=508218
+----- End of access driver -----
+
+Output for shape=r, levels=10, policy=bst
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 10
+  Build random tree with size=1023
+  After access exercise, time=110.494, tree size=1023
+    Expect successful search=22.4487, measured=25.4397, trials=499323
+    Expect unsuccessful search=25.4238, measured=25.4308, trials=500677
+----- End of access driver -----
+
+Output for shape=r, levels=10, policy=avl
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 10
+  Build random tree with size=1023
+  After access exercise, time=106.806, tree size=1023
+    Expect successful search=17.4282, measured=20.4067, trials=499323
+    Expect unsuccessful search=20.4082, measured=20.4092, trials=500677
+----- End of access driver -----
+
+Output for shape=r, levels=15, policy=bst
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 15
+  Build random tree with size=32767
+  After access exercise, time=244.67, tree size=32767
+    Expect successful search=36.1865, measured=39.1976, trials=499020
+    Expect unsuccessful search=39.1853, measured=39.1868, trials=500980
+----- End of access driver -----
+
+Output for shape=r, levels=15, policy=avl
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 15
+  Build random tree with size=32767
+  After access exercise, time=221.291, tree size=32767
+    Expect successful search=27.596, measured=30.5889, trials=499020
+    Expect unsuccessful search=30.595, measured=30.5951, trials=500980
+----- End of access driver -----
+
+Output for shape=r, levels=20, policy=bst
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 20
+  Build random tree with size=1048575
+  After access exercise, time=1045.92, tree size=1048575
+    Expect successful search=49.9952, measured=53.0409, trials=499871
+    Expect unsuccessful search=52.9952, measured=53.0128, trials=500129
+----- End of access driver -----
+
+Output for shape=r, levels=20, policy=avl
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 20
+  Build random tree with size=1048575
+  After access exercise, time=881.909, tree size=1048575
+    Expect successful search=37.7925, measured=40.8009, trials=499871
+    Expect unsuccessful search=40.7925, measured=40.7938, trials=500129
+----- End of access driver -----
+
+Output for shape=p, levels=5, policy=bst
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 5
+  Build poor tree with size=31
+  After access exercise, time=68.343, tree size=31
+    Expect successful search=10.1613, measured=12.7529, trials=491786
+    Expect unsuccessful search=12.75, measured=12.7526, trials=508214
+----- End of access driver -----
+
+Output for shape=p, levels=5, policy=avl
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 5
+  Build poor tree with size=31
+  After access exercise, time=66.72, tree size=31
+    Expect successful search=7.51613, measured=10.1876, trials=491786
+    Expect unsuccessful search=10.1875, measured=10.188, trials=508214
+----- End of access driver -----
+
+Output for shape=p, levels=10, policy=bst
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 10
+  Build poor tree with size=1023
+  After access exercise, time=135.35, tree size=1023
+    Expect successful search=39.9795, measured=43.0786, trials=499306
+    Expect unsuccessful search=42.9375, measured=42.9895, trials=500694
+----- End of access driver -----
+
+Output for shape=p, levels=10, policy=avl
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 10
+  Build poor tree with size=1023
+  After access exercise, time=106.209, tree size=1023
+    Expect successful search=17.4633, measured=20.45, trials=499306
+    Expect unsuccessful search=20.4434, measured=20.4451, trials=500694
+----- End of access driver -----
+
+Output for shape=p, levels=15, policy=bst
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 15
+  Build poor tree with size=32767
+  After access exercise, time=730.298, tree size=32767
+    Expect successful search=268, measured=271.219, trials=499166
+    Expect unsuccessful search=270.992, measured=271.265, trials=500834
+----- End of access driver -----
+
+Output for shape=p, levels=15, policy=avl
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 15
+  Build poor tree with size=32767
+  After access exercise, time=265.776, tree size=32767
+    Expect successful search=27.7669, measured=30.7659, trials=499166
+    Expect unsuccessful search=30.766, measured=30.7637, trials=500834
+----- End of access driver -----
+
+Output for shape=p, levels=20, policy=bst
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 20
+  Build poor tree with size=1048575
+  After access exercise, time=3795.52, tree size=1048575
+    Expect successful search=1042, measured=1047.85, trials=499703
+    Expect unsuccessful search=1045, measured=1045.69, trials=500297
+----- End of access driver -----
+
+Output for shape=p, levels=20, policy=avl
+Seed: 1476379020
+
+----- Access driver -----
+  Access trials: 1000000
+  Levels for tree: 20
+  Build poor tree with size=1048575
+  After access exercise, time=797.227, tree size=1048575
+    Expect successful search=37.8976, measured=40.8981, trials=499703
+    Expect unsuccessful search=40.8975, measured=40.8945, trials=500297
 ----- End of access driver -----
 
