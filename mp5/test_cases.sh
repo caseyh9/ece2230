@@ -10,16 +10,33 @@
 
 
 # set these lists with the parameter space's values
-tests='100 1000 10000 100000 1000000'
-# descending,  ascending, random
+shapes='o r p'
+levels='5 10 15 20'
+policies='bst avl'
 
-# sorting algorithm IDs
+valgrind --leak-check=yes --log-file='valgrind_output0.txt' ./lab5 -u 0
+valgrind --leak-check=yes --log-file='valgrind_output1.txt' ./lab5 -u 1
+valgrind --leak-check=yes --log-file='valgrind_output2.txt' ./lab5 -u 2
+valgrind --leak-check=yes --log-file='valgrind_output3.txt' ./lab5 -u 3
+valgrind --leak-check=yes --log-file='valgrind_output4.txt' ./lab5 -u 4
+valgrind --leak-check=yes --log-file='valgrind_output5.txt' ./lab5 -u 5
+valgrind --leak-check=yes --log-file='valgrind_output6.txt' ./lab5 -u 6
+valgrind --leak-check=yes --log-file='valgrind_output7.txt' ./lab5 -u 7
+valgrind --leak-check=yes --log-file='valgrind_output8.txt' ./lab5 -u 8
 
-# sort output orders
+# Tests with 0 accesses that print out the resulting tree
+./lab5 -o -w 5 -t 0 -v
+./lab5 -r -w 5 -t 0 -v -s 1
+./lab5 -p -w 5 -t 0 -v -s 2
 
-# First run each sort function with a memory check and save valgrind output
-# Run test for first 4 functions
-for t in $tests
+# Test with 1000000 accesses
+for s in $shapes
 do
-	./lab5 -o -w 20 -t $t
+	for l in $levels
+	do
+		for p in $policies
+		do
+			./lab5 -$s -w $l -t 1000000 -f $p
+		done
+	done
 done

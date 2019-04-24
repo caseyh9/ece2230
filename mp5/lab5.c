@@ -6,6 +6,11 @@
  *
  * The unit driver builds a custom tree and removes selected keys 
  *   -u 1:  run the unit driver with a custom tree
+ *	 -u 4:  worst case insertion and deletion
+ *	 -u 5:  insertion and deletion of extreme values
+ *	 -u 6:  check handling of repeat values for insertion and deletion
+ *	 -u 7:  check root deletions
+ *	 -u 8:  test removal of leaves
  *
  * There are three drivers to build a tree using bst_insert and then access
  * keys in the tree using bst_access.  Use
@@ -112,6 +117,46 @@ int main(int argc, char **argv)
         unitDriver(ins, sizeof ins / sizeof(int),
 		   del, sizeof del / sizeof(int));
     }
+    if (UnitNumber == 4)
+    {
+	// check worst case insertion and deletion
+	const int ins[] = {1, 2, 3, 4, 5, 6, 7, 8};
+	const int del[] = {7, 5, 8, 1}; 
+        unitDriver(ins, sizeof ins / sizeof(int),
+		   del, sizeof del / sizeof(int));
+    }
+    if (UnitNumber == 5)
+    {
+	// check insertion and deletion of extreme values
+	const int ins[] = {0, -18921, 38238, 39825074, -84928};
+	const int del[] = {-18921, 38238, 0, -84928, 39825074};
+        unitDriver(ins, sizeof ins / sizeof(int),
+		   del, sizeof del / sizeof(int));
+    }
+    if (UnitNumber == 6)
+    {
+	// check repeated inserions and deletions
+	const int ins[] = {10, 10, 25, 42, 2, 3, 3, 2, 42, 25, 16, 25, 25};
+	const int del[] = {10, 2, 2, 2, 42, 25, 25, 25, 10, 3, 3}; 
+        unitDriver(ins, sizeof ins / sizeof(int),
+		   del, sizeof del / sizeof(int));
+    }
+    if (UnitNumber == 7)
+    {
+	// check root deletions
+	const int ins[] = {10, 7, 8, 12, 14, 16, 4};
+	const int del[] = {10, 12, 14, 16, 7, 8, 4}; 
+        unitDriver(ins, sizeof ins / sizeof(int),
+		   del, sizeof del / sizeof(int));
+    }
+    if (UnitNumber == 8)
+    {
+	// Remove leaves
+	const int ins[] = {10, 5, 15, 3, 7, 13, 18};
+	const int del[] = {3, 7, 13, 18, 5, 15, 10}; 
+        unitDriver(ins, sizeof ins / sizeof(int),
+		   del, sizeof del / sizeof(int));
+    }
 
     /* ----- large tree tests  ----- */
     if (OptimalTest)                       /* enable with -o flag */
@@ -204,7 +249,8 @@ void accessDriver(int test_type)
         build_optimal(test_tree, Levels);
     } else if (test_type == RANDOM) {
         printf(" random");
-        build_random(test_tree, pow(2,Levels)-1);
+		int x = pow(2,Levels)-1;
+        build_random(test_tree, x);
     } else if (test_type == POOR) {
         printf(" poor");
         build_poor(test_tree, Levels);

@@ -169,7 +169,8 @@ int bst_insert(bst_t *T, bst_key_t key, data_t elem_ptr)
 		CompCalls++;
 		if (key == node->key)
 		{
-			// replace with data given
+			// Free old data and replace with data given
+			free(node->data_ptr);
 			node->data_ptr = elem_ptr;
 			insertion = 0;
 		}
@@ -206,6 +207,8 @@ int bst_insert(bst_t *T, bst_key_t key, data_t elem_ptr)
 		(T->size)++;
 	}
 
+	// Free dangling pointer 
+	node = NULL;
 	// Update tree stats
 	T->num_recent_rotations = NumRotations;
 	T->num_recent_key_comparisons = CompCalls;
@@ -305,7 +308,7 @@ bst_node_t* insert_node(bst_node_t *node, bst_key_t key, data_t elem_ptr, int po
 			return rotate_right(node);
 		}
 		// Right-Left
-		if (balance < -1 && key < node->left->key)
+		if (balance < -1 && key < node->right->key)
 		{
 			node->right = rotate_right(node->right);
 			return rotate_left(node);
@@ -479,6 +482,8 @@ data_t bst_remove(bst_t *T, bst_key_t key)
 		(T->size)--;
 	}
 
+	// Free dangling pointer
+	node = NULL;
     // update tree stats
 	T->num_recent_rotations = NumRotations;
 	T->num_recent_key_comparisons = CompCalls;

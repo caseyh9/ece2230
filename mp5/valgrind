@@ -1,0 +1,15 @@
+Lab5 command line options
+General options ---------
+  -v        turn on verbose prints (default off)
+  -s 123    seed for random number generator
+  -f bst|avl
+            Type of tree
+  -u 0      run unit test driver with custom tree
+  -e        run equilibrium test driver
+  -o        run access test driver with optimum tree
+  -r        run access test driver with random tree
+  -p        run driver with poor insertion order
+
+Options for test driver ---------
+  -w 16     levels in tree for drivers
+  -t 50000  number of trials in drivers
