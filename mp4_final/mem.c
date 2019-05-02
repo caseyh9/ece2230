@@ -61,6 +61,13 @@ static heap_stats_t stats;  /* initialized by the O/S to all 0s */
 /* prototypes for functions private to mem.c */
 void mem_validate(void);
 chunk_t *morecore(int);
+void test1(void);
+void test1()
+{
+	void *mem;
+	mem = Mem_alloc(1);
+	printf("\nsize = %d\n\n", Dummy.next->size);
+}
 
 /* function to request 1 or more pages from the operating system.
  *

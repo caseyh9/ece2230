@@ -24,7 +24,7 @@ do
 	do
 		for r in $seeds
 		do
-			./lab4 -s $s -f $s -u $u
+			./lab4 -s $r -f $s -u $u
 		done
 	done
 done
@@ -36,7 +36,7 @@ do
 	do
 		for r in $seeds
 		do
-			./lab4 -s $s -f $s -c -u $u
+			./lab4 -s $r -f $s -c -u $u
 		done
 	done
 done

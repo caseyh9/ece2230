@@ -7,11 +7,11 @@ Seed: 1476379020
   Initial random tree size=31
   Expect successful search for initial tree=7.58065
   Expect unsuccessful search for initial tree=10.25
-  After exercise, time=0.196, new tree size=33
+  After exercise, time=0.211, new tree size=33
   successful searches during exercise=7.81048, trials=496
   unsuccessful searches during exercise=10.0278, trials=504
   Validating tree...passed
-  After access experiment, time=0.074, tree size=33
+  After access experiment, time=0.073, tree size=33
   Expect successful search=7.90909, measured=9.56972, trials=502
   Expect unsuccessful search=10.5882, measured=9.54618, trials=498
 ----- End of equilibrium test -----
@@ -25,11 +25,11 @@ Seed: 1476379020
   Initial random tree size=31
   Expect successful search for initial tree=7.58065
   Expect unsuccessful search for initial tree=10.25
-  After exercise, time=1.861, new tree size=28
+  After exercise, time=1.549, new tree size=28
   successful searches during exercise=7.78563, trials=4982
   unsuccessful searches during exercise=9.99283, trials=5018
   Validating tree...passed
-  After access experiment, time=0.718, tree size=28
+  After access experiment, time=0.52, tree size=28
   Expect successful search=7.35714, measured=10.0018, trials=4436
   Expect unsuccessful search=10, measured=9.98994, trials=5564
 ----- End of equilibrium test -----
@@ -45,11 +45,11 @@ Seed: 1476379020
   Initial random tree size=1023
   Expect successful search for initial tree=17.4282
   Expect unsuccessful search for initial tree=20.4082
-  After exercise, time=0.253, new tree size=1023
+  After exercise, time=0.232, new tree size=1023
   successful searches during exercise=17.4348, trials=506
   unsuccessful searches during exercise=20.0405, trials=494
   Validating tree...passed
-  After access experiment, time=0.105, tree size=1023
+  After access experiment, time=0.097, tree size=1023
   Expect successful search=17.4712, measured=20.0519, trials=501
   Expect unsuccessful search=20.4512, measured=19.9279, trials=499
 ----- End of equilibrium test -----
@@ -63,11 +63,11 @@ Seed: 1476379020
   Initial random tree size=1023
   Expect successful search for initial tree=17.4282
   Expect unsuccessful search for initial tree=20.4082
-  After exercise, time=2.455, new tree size=1039
+  After exercise, time=2.175, new tree size=1039
   successful searches during exercise=17.4389, trials=4958
   unsuccessful searches during exercise=20.0508, trials=5042
   Validating tree...passed
-  After access experiment, time=1.174, tree size=1039
+  After access experiment, time=1.006, tree size=1039
   Expect successful search=17.5602, measured=19.9992, trials=5039
   Expect unsuccessful search=20.5404, measured=19.9944, trials=4961
 ----- End of equilibrium test -----
@@ -83,11 +83,11 @@ Seed: 1476379020
   Initial random tree size=32767
   Expect successful search for initial tree=27.596
   Expect unsuccessful search for initial tree=30.595
-  After exercise, time=0.394, new tree size=32775
+  After exercise, time=0.484, new tree size=32775
   successful searches during exercise=28.0863, trials=510
   unsuccessful searches during exercise=30.6735, trials=490
   Validating tree...passed
-  After access experiment, time=0.239, tree size=32775
+  After access experiment, time=0.4, tree size=32775
   Expect successful search=27.6011, measured=30.5872, trials=470
   Expect unsuccessful search=30.6002, measured=30.5962, trials=530
 ----- End of equilibrium test -----
@@ -101,11 +101,11 @@ Seed: 1476379020
   Initial random tree size=32767
   Expect successful search for initial tree=27.596
   Expect unsuccessful search for initial tree=30.595
-  After exercise, time=4.601, new tree size=32810
+  After exercise, time=6.068, new tree size=32810
   successful searches during exercise=27.6005, trials=4966
   unsuccessful searches during exercise=30.4919, trials=5034
   Validating tree...passed
-  After access experiment, time=2.42, tree size=32810
+  After access experiment, time=3.223, tree size=32810
   Expect successful search=27.6261, measured=30.3626, trials=5069
   Expect unsuccessful search=30.6252, measured=30.3285, trials=4931
 ----- End of equilibrium test -----
@@ -121,11 +121,11 @@ Seed: 1476379020
   Initial random tree size=1048575
   Expect successful search for initial tree=37.7925
   Expect unsuccessful search for initial tree=40.7925
-  After exercise, time=1.54, new tree size=1048593
+  After exercise, time=1.546, new tree size=1048593
   successful searches during exercise=37.8589, trials=489
   unsuccessful searches during exercise=40.7945, trials=511
   Validating tree...passed
-  After access experiment, time=0.97, tree size=1048593
+  After access experiment, time=0.996, tree size=1048593
   Expect successful search=37.7927, measured=40.4948, trials=485
   Expect unsuccessful search=40.7927, measured=40.6718, trials=515
 ----- End of equilibrium test -----
@@ -139,11 +139,11 @@ Seed: 1476379020
   Initial random tree size=1048575
   Expect successful search for initial tree=37.7925
   Expect unsuccessful search for initial tree=40.7925
-  After exercise, time=13.955, new tree size=1048572
+  After exercise, time=13.087, new tree size=1048572
   successful searches during exercise=37.7976, trials=4970
   unsuccessful searches during exercise=40.7682, trials=5030
   Validating tree...passed
-  After access experiment, time=8.93, tree size=1048572
+  After access experiment, time=8.198, tree size=1048572
   Expect successful search=37.7934, measured=40.7507, trials=4977
   Expect unsuccessful search=40.7934, measured=40.7752, trials=5023
 ----- End of equilibrium test -----
@@ -157,11 +157,11 @@ Seed: 1476379020
   Initial random tree size=1048575
   Expect successful search for initial tree=37.7925
   Expect unsuccessful search for initial tree=40.7925
-  After exercise, time=130.023, new tree size=1048433
+  After exercise, time=111.107, new tree size=1048433
   successful searches during exercise=37.8089, trials=50241
   unsuccessful searches during exercise=40.766, trials=49759
   Validating tree...passed
-  After access experiment, time=84.894, tree size=1048433
+  After access experiment, time=97.936, tree size=1048433
   Expect successful search=37.8019, measured=40.6967, trials=49908
   Expect unsuccessful search=40.8018, measured=40.6933, trials=50092
 ----- End of equilibrium test -----

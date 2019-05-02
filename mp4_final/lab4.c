@@ -462,6 +462,10 @@ int main(int argc, char **argv)
         printf("\n----- End unit test driver 6 -----\n");
 
 	}
+	else if (unit_driver == 7)
+	{
+		test1();
+	}
     // add your unit test drivers here to test for special cases such as
     //   -- request the number of bytes that matches a whole page, and a
     //      size that is one unit smaller than a page
